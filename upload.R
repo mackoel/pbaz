@@ -1,12 +1,6 @@
-
-#ODB <- odb.open(dbnam)
-conn <- dbConnect(drv, "jdbc:hsqldb:hsql://localhost/pbaz")
-
 locdf <- data.frame(locname = "KOS",
 		country = "Russia",
 		region = "Kuban")
-
-#odb.insert(ODB, "location", locdf, execute = TRUE, dateFormat = "%m/%d/%Y")
 
 SQL <- sqlAppendTable(conn, "location", locdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
@@ -17,17 +11,11 @@ colnames(mdf) <- c('id', 'location', 'year', 'month', 'tmean', 'pmean', 'pdays',
 SQL <- sqlAppendTable(conn, "meteo", mdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
-#odb.insert(ODB, "meteo", cbind(1:5, rep('KOS', 5), rep(2016, 5), 4:8, t(kos2016meteo[,-1])), execute = TRUE, dateFormat = "%m/%d/%Y")
-
 kos2017meteo <- read.csv('../meteo2017.csv')
 mdf <- data.frame(cbind(6:10, rep('KOS', 5), rep(2017, 5), 4:8, t(kos2017meteo[,-1])))
 colnames(mdf) <- c('id', 'location', 'year', 'month', 'tmean', 'pmean', 'pdays', 'tsum10', 'tsoil', 'hrel')
 SQL <- sqlAppendTable(conn, "meteo", mdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
-
-#odb.insert(ODB, "meteo", cbind(6:10, rep('KOS', 5), rep(2017, 5), 4:8, t(kos2017meteo[,-1])), execute = TRUE, dateFormat = "%m/%d/%Y")
-#odb.close(ODB, write=TRUE)
-#ODB <- odb.open(dbnam)
 
 pd <- read.csv('../pheno_doug_2017.csv', header = 1, stringsAsFactors = FALSE)
 
