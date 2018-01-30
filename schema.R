@@ -107,17 +107,42 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	'ALTER TABLE gt_cnum ADD CONSTRAINT "CHECK_cnumber" CHECK (cnumber = 0 OR cnumber = 2)'
+	'ALTER TABLE gt_cnum ADD CONSTRAINT "CHECK_cnumber" CHECK (cnumber >= 0 AND cnumber <= 2)'
 )
 
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"ALTER TABLE gt_snp ADD FOREIGN KEY (gt) REFERENCES genotype(gname)",
-	"ALTER TABLE gt_snp ADD FOREIGN KEY (snpabbr) REFERENCES snp(snpabbr)",
-	"ALTER TABLE gt_cnum ADD FOREIGN KEY (gt) REFERENCES genotype(gname)",
-	"ALTER TABLE gt_cnum ADD FOREIGN KEY (cnabbr) REFERENCES cnum(cnabbr)",
-	"ALTER TABLE genotype ADD FOREIGN KEY (ancleft) REFERENCES variety(name)",
+	"ALTER TABLE gt_snp ADD FOREIGN KEY (gt) REFERENCES genotype(gname)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE gt_snp ADD FOREIGN KEY (snpabbr) REFERENCES snp(snpabbr)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE gt_cnum ADD FOREIGN KEY (gt) REFERENCES genotype(gname)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE gt_cnum ADD FOREIGN KEY (cnabbr) REFERENCES cnum(cnabbr)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE genotype ADD FOREIGN KEY (ancleft) REFERENCES variety(name)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"ALTER TABLE genotype ADD FOREIGN KEY (ancright) REFERENCES variety(name)"
 )
 
@@ -210,8 +235,18 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"ALTER TABLE accession ADD FOREIGN KEY (genotype) REFERENCES genotype(gname)",
-	"ALTER TABLE accession ADD FOREIGN KEY (variety) REFERENCES variety(name)",
+	"ALTER TABLE accession ADD FOREIGN KEY (genotype) REFERENCES genotype(gname)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE accession ADD FOREIGN KEY (variety) REFERENCES variety(name)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"ALTER TABLE accession ADD FOREIGN KEY (env) REFERENCES environment(envname)"
 )
 

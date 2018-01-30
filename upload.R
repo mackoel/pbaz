@@ -461,3 +461,154 @@ qg <- lapply(2:mgt, FUN = function(cc) {
 		})
 	})
 
+
+#
+# for y in /storage3/asokolkova/finding_CNV/cnv_files/*after_filtration.txt;do mkdir `basename $y | sed -e "s/_Ca1.*//g"`;ln -s $y `basename $y | sed -e "s/_Ca1.*//g"`;done
+#
+library(intansv)
+cnvoutputdir <- "cnvr"
+availdat <- list.dirs(path = cnvoutputdir, full.names = FALSE, recursive = FALSE)
+ret <- lapply(availdat, FUN = function(a) {
+	cat(a, '\n')
+	tryCatch(
+	    {
+		dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", a, "',", 0, ',', "'ctab'", ',', 1900, ")"))
+	    },
+	    error = function(cond) { message(cond); return(NA) },
+	    warning = function(cond) { message(cond); return(NULL)},
+	    finally = { message("Some other message at the end") }
+	)
+	tryCatch(
+	    {
+		dbSendStatement(conn, paste0("INSERT INTO genotype (gname, ancleft, ancright) values ('", a, "','", a, "','", a, "')"))
+	    },
+	    error = function(cond) { message(cond); return(NA) },
+	    warning = function(cond) { message(cond); return(NULL)},
+	    finally = { message("Some other message at the end") }
+	)
+})
+
+ret <- lapply(availdat, FUN = function(a) {
+	    cnvr_a <- tryCatch(
+		{
+		    cnvr_a <- readCnvnator(dataDir = file.path(cnvoutputdir, a), regSizeLowerCutoff = 100, regSizeUpperCutoff = 1000000, method="CNVnator")
+		},
+	    error=function(cond) { message(cond); return(NULL)},
+	    warning=function(cond) { message(cond); return(NULL) },
+	    finally={ message("Some other message at the end") })
+	    if (!is.null(cnvr_a)) {
+			ret_a <- apply(cnvr_a$dup, 1, FUN = function(u) {
+				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+				w = tryCatch(
+				    {
+					qu <- paste0("INSERT INTO cnum (cnabbr, chrname, coordstart, coordend, length) values ('", cnpabbr, "','", u[1], "',", as.numeric(u[2]), ",", as.numeric(u[3]),",", as.numeric(u[4]), ")", '\n')
+					cat(qu, '\n')
+					dbSendStatement(conn, qu)
+				    },
+				    error = function(cond) { message(cond); return(NA) },
+				    warning = function(cond) { message(cond); return(NULL)},
+				    finally = { message("Some other message at the end") }
+				)
+			})
+			cat(' GOOD \n')
+	    }
+})
+
+ret <- lapply(availdat, FUN = function(a) {
+	    cnvr_a <- tryCatch(
+		{
+		    cnvr_a <- readCnvnator(dataDir = file.path(cnvoutputdir, a), regSizeLowerCutoff = 100, regSizeUpperCutoff = 1000000, method="CNVnator")
+		},
+	    error=function(cond) { message(cond); return(NULL)},
+	    warning=function(cond) { message(cond); return(NULL) },
+	    finally={ message("Some other message at the end") })
+	    if (!is.null(cnvr_a)) {
+			ret_a <- apply(cnvr_a$del, 1, FUN = function(u) {
+				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+				tryCatch(
+				    {
+					qu <- paste0("INSERT INTO cnum (cnabbr, chrname, coordstart, coordend, length) values ('", cnpabbr, "','", u[1], "',", as.numeric(u[2]), ",", as.numeric(u[3]),",", as.numeric(u[4]), ")", '\n')
+					cat(qu, '\n')
+					dbSendStatement(conn, qu)
+				    },
+				    error = function(cond) { message(cond); return(NA) },
+				    warning = function(cond) { message(cond); return(NULL)},
+				    finally = { message("Some other message at the end") }
+				)
+			})
+		#    }
+			cat(' GOOD \n')
+	    }
+})
+
+ret <- lapply(availdat, FUN = function(a) {
+	    cnvr_a <- tryCatch(
+		{
+		    cnvr_a <- readCnvnator(dataDir = file.path(cnvoutputdir, a), regSizeLowerCutoff = 100, regSizeUpperCutoff = 1000000, method="CNVnator")
+		},
+	    error=function(cond) { message(cond); return(NULL)},
+	    warning=function(cond) { message(cond); return(NULL) },
+	    finally={ message("Some other message at the end") })
+	    if (!is.null(cnvr_a)) {
+			ret_a <- apply(cnvr_a$inv, 1, FUN = function(u) {
+				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+				tryCatch(
+				    {
+					qu <- paste0("INSERT INTO cnum (cnabbr, chrname, coordstart, coordend, length) values ('", cnpabbr, "','", u[1], "',", as.numeric(u[2]), ",", as.numeric(u[3]),",", as.numeric(u[4]), ")", '\n')
+					cat(qu, '\n')
+					dbSendStatement(conn, qu)
+				    },
+				    error = function(cond) { message(cond); return(NA) },
+				    warning = function(cond) { message(cond); return(NULL)},
+				    finally = { message("Some other message at the end") }
+				)
+			})
+		#    }
+			cat(' GOOD \n')
+	    }
+})
+
+ret <- lapply(availdat, FUN = function(a) {
+	    cnvr_a <- tryCatch(
+		{
+		    cnvr_a <- readCnvnator(dataDir = file.path(cnvoutputdir, a), regSizeLowerCutoff = 100, regSizeUpperCutoff = 1000000, method="CNVnator")
+		},
+	    error=function(cond) { message(cond); return(NULL)},
+	    warning=function(cond) { message(cond); return(NULL) },
+	    finally={ message("Some other message at the end") })
+	    if (!is.null(cnvr_a)) {
+			ret_a <- apply(cnvr_a$dup, 1, FUN = function(u) {
+				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+				qu <- paste0("INSERT INTO gt_cnum (gt, cnabbr, cnumber) VALUES (", "'", a, "'", ",", "'", cnpabbr, "'", ",", 2, ")")
+				cat(qu, '\n')
+				tryCatch( { dbSendStatement(conn, qu) },
+				    error = function(cond) { message(cond); return(NA) },
+				    warning = function(cond) { message(cond); return(NULL)},
+				    finally = { message("Some other message at the end") }
+				)
+			})
+			ret_a <- apply(cnvr_a$del, 1, FUN = function(u) {
+				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+				qu <- paste0("INSERT INTO gt_cnum (gt, cnabbr, cnumber) VALUES (", "'", a, "'", ",", "'", cnpabbr, "'", ",", 0, ")")
+				cat(qu, '\n')
+				tryCatch( { dbSendStatement(conn, qu) },
+				    error = function(cond) { message(cond); return(NA) },
+				    warning = function(cond) { message(cond); return(NULL)},
+				    finally = { message("Some other message at the end") }
+				)
+			})
+#			print(dim(cnvr_a$inv))
+#			ret_a <- apply(cnvr_a$inv, 1, FUN = function(u) {
+#				cnpabbr <- paste(u[1], as.numeric(u[2]), as.numeric(u[3]), sep = "_")
+#				qu <- paste0("INSERT INTO gt_cnum (gt, cnabbr, cnumber) VALUES (", "'", a, "'", ",", "'", cnpabbr, "'", ",", 1, ")")
+#				cat(qu, '\n')
+#				tryCatch( { dbSendStatement(conn, qu) },
+#				    error = function(cond) { message(cond); return(NA) },
+#				    warning = function(cond) { message(cond); return(NULL)},
+#				    finally = { message("Some other message at the end") }
+#				)
+#			})
+		#    }
+			cat(' GOOD \n')
+	    }
+})

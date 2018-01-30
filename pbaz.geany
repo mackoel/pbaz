@@ -34,3 +34,14 @@ ignored_dirs_patterns=.*;CVS;
 ignored_file_patterns=*.o;*.obj;*.a;*.lib;*.so;*.dll;*.lo;*.la;*.class;*.jar;*.pyc;*.mo;*.gmo;
 generate_tag_prefs=0
 external_dirs=
+
+[files]
+current_page=1
+FILE_NAME_0=139;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fschema.R;0;4
+FILE_NAME_1=18542;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fupload.R;0;4
+FILE_NAME_2=1486;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Finterface.R;0;4
+FILE_NAME_3=173;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fconnection.R;0;4
+FILE_NAME_4=98;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fexamples.R;0;4
+
+[VTE]
+last_dir=/storage3/kkozlov/Calcs/chickpea
