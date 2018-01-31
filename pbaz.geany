@@ -36,12 +36,12 @@ generate_tag_prefs=0
 external_dirs=
 
 [files]
-current_page=1
-FILE_NAME_0=139;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fschema.R;0;4
-FILE_NAME_1=18542;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fupload.R;0;4
-FILE_NAME_2=1486;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Finterface.R;0;4
+current_page=2
+FILE_NAME_0=2237;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fschema.R;0;4
+FILE_NAME_1=23744;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fupload.R;0;4
+FILE_NAME_2=2432;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Finterface.R;0;4
 FILE_NAME_3=173;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fconnection.R;0;4
-FILE_NAME_4=98;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fexamples.R;0;4
+FILE_NAME_4=215;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fexamples.R;0;4
 
 [VTE]
 last_dir=/storage3/kkozlov/Calcs/chickpea
