@@ -19,7 +19,12 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+    <repositories>
+    <repository>
+        <id>Attlassian</id>
+        <url>https://maven.atlassian.com/3rdparty/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,12 +42,7 @@
     	    <groupId>org.springframework.boot</groupId>
     	    <artifactId>spring-boot-starter-web</artifactId>
             <version>1.5.9.RELEASE</version>
-    	    <exclusions>
-        	<exclusion>
-        	    <groupId>org.springframework.boot</groupId>
-    	            <artifactId>spring-boot-starter-tomcat</artifactId>
-	        </exclusion>
-            </exclusions>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,6 +68,12 @@
             <version>2.0</version>
             <type>pom</type>
         </dependency>
+<!-- https://mvnrepository.com/artifact/postgresql/postgresql-jdbc42 -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql-jdbc42</artifactId>
+            <version>9.4.1208-atlassian-hosted</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -88,7 +94,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>1.5.9.RELEASE</version>
             <type>pom</type>
         </dependency>
