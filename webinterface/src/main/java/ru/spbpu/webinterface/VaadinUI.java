@@ -29,67 +29,72 @@ import com.vaadin.ui.VerticalLayout;
 public class VaadinUI extends UI {
     private final AccessionRepository repo;
 
-	private final AccessionEditor editor;
+    private final AccessionEditor editor;
+    private final AccessionHistogram hist;
 
-	final Grid<Accession> grid;
+    final Grid<Accession> grid;
 
-	final TextField filter;
+    final TextField filter;
 
-	private final Button addNewBtn;
+    private final Button addNewBtn;
+    private final Button histogramBtn;
 
-	@Autowired
-	public VaadinUI(AccessionRepository repo, AccessionEditor editor) {
-		this.repo = repo;
-		this.editor = editor;
-		this.grid = new Grid<>(Accession.class);
-		this.filter = new TextField();
-		this.addNewBtn = new Button("New customer", FontAwesome.PLUS);
-	}
+    @Autowired
+    public VaadinUI(AccessionRepository repo, AccessionEditor editor, AccessionHistogram hist) {
+        this.repo = repo;
+        this.editor = editor;
+        this.hist = hist;
+        this.grid = new Grid<>(Accession.class);
+        this.filter = new TextField();
+        this.addNewBtn = new Button("Accession details", FontAwesome.PLUS);
+        this.histogramBtn = new Button("Show histogram", FontAwesome.PLUS);
+    }
 
-	@Override
-	protected void init(VaadinRequest request) {
+    @Override
+    protected void init(VaadinRequest request) {
 		// build layout
-		HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
-		VerticalLayout mainLayout = new VerticalLayout(actions, grid, editor);
-		setContent(mainLayout);
+        HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn, histogramBtn);
+        VerticalLayout mainLayout = new VerticalLayout(actions, grid, editor);
+        setContent(mainLayout);
 
-		grid.setHeight(300, Unit.PIXELS);
-		grid.setColumns("id", "firstName", "lastName");
+        grid.setHeight(300, Unit.PIXELS);
+        grid.setColumns("num", "genotype", "env");
 
-		filter.setPlaceholder("Filter by last name");
+        filter.setPlaceholder("Filter by genotype");
 
 		// Hook logic to components
 
 		// Replace listing with filtered content when user changes filter
-		filter.setValueChangeMode(ValueChangeMode.LAZY);
-		filter.addValueChangeListener(e -> listAccessions(e.getValue()));
+        filter.setValueChangeMode(ValueChangeMode.LAZY);
+        filter.addValueChangeListener(e -> listAccessions(e.getValue()));
 
 		// Connect selected Customer to editor or hide if none is selected
-		grid.asSingleSelect().addValueChangeListener(e -> {
-			editor.editAccession(e.getValue());
-		});
+        grid.asSingleSelect().addValueChangeListener(e -> {
+                editor.editAccession(e.getValue());
+            });
 
 		// Instantiate and edit new Customer the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editAccession(new Accession("", "")));
+        addNewBtn.addClickListener(e -> editor.editAccession(new Accession("", "")));
+        histogramBtn.addClickListener(e -> hist.plotHistogramAccession(filter.getValue()));
 
 		// Listen changes made by the editor, refresh data from backend
-		editor.setChangeHandler(() -> {
-			editor.setVisible(false);
-			listAccessions(filter.getValue());
-		});
+        editor.setChangeHandler(() -> {
+                editor.setVisible(false);
+                listAccessions(filter.getValue());
+            });
 
 		// Initialize listing
-		listAccessions(null);
-	}
+        listAccessions(null);
+    }
 
 	// tag::listAccessions[]
-	void listAccessions(String filterText) {
-		if (StringUtils.isEmpty(filterText)) {
-			grid.setItems(repo.findAll());
-		}
-		else {
-			grid.setItems(repo.findByGenotypeStartsWithIgnoreCase(filterText));
-		}
-	}
+    void listAccessions(String filterText) {
+        if (StringUtils.isEmpty(filterText)) {
+            grid.setItems(repo.findAll());
+        }
+        else {
+            grid.setItems(repo.findByGenotypeStartsWithIgnoreCase(filterText));
+        }
+    }
 	// end::listAccessions[]
 }

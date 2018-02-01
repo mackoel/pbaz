@@ -36,82 +36,82 @@ import com.vaadin.ui.themes.ValoTheme;
 public class AccessionEditor extends VerticalLayout {
     private final AccessionRepository repository;
 
-	/**
-	 * The currently edited customer
-	 */
-	private Accession accession;
+    /**
+     * The currently edited customer
+     */
+    private Accession accession;
 
-	/* Fields to edit properties in Customer entity */
-	TextField genotype = new TextField("Genotype");
-	TextField env = new TextField("env");
+    /* Fields to edit properties in Customer entity */
+    TextField genotype = new TextField("Genotype");
+    TextField env = new TextField("env");
+    
+    /* Action buttons */
+    Button save = new Button("Save", FontAwesome.SAVE);
+    Button cancel = new Button("Cancel");
+    Button delete = new Button("Delete", FontAwesome.TRASH_O);
+    CssLayout actions = new CssLayout(save, cancel, delete);
 
-	/* Action buttons */
-	Button save = new Button("Save", FontAwesome.SAVE);
-	Button cancel = new Button("Cancel");
-	Button delete = new Button("Delete", FontAwesome.TRASH_O);
-	CssLayout actions = new CssLayout(save, cancel, delete);
+    Binder<Accession> binder = new Binder<>(Accession.class);
 
-	Binder<Accession> binder = new Binder<>(Accession.class);
+    @Autowired
+    public AccessionEditor(AccessionRepository repository) {
+    	this.repository = repository;
 
-	@Autowired
-	public AccessionEditor(AccessionRepository repository) {
-		this.repository = repository;
+        addComponents(genotype, env, actions);
 
-		addComponents(genotype, env, actions);
+	// bind using naming convention
+	binder.bindInstanceFields(this);
 
-		// bind using naming convention
-		binder.bindInstanceFields(this);
+	// Configure and style components
+	setSpacing(true);
+	actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+	save.setStyleName(ValoTheme.BUTTON_PRIMARY);
+	save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-		// Configure and style components
-		setSpacing(true);
-		actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		save.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        // wire action buttons to save, delete and reset
+	save.addClickListener(e -> repository.save(accession));
+	delete.addClickListener(e -> repository.delete(accession));
+	cancel.addClickListener(e -> editAccession(accession));
+	setVisible(false);
+    }
 
-		// wire action buttons to save, delete and reset
-		save.addClickListener(e -> repository.save(accession));
-		delete.addClickListener(e -> repository.delete(accession));
-		cancel.addClickListener(e -> editAccession(accession));
+    public interface ChangeHandler {
+
+	void onChange();
+    }
+
+    public final void editAccession(Accession c) {
+	if (c == null) {
 		setVisible(false);
+		return;
 	}
-
-	public interface ChangeHandler {
-
-		void onChange();
+	final boolean persisted = c.getNum() != null;
+	if (persisted) {
+		// Find fresh entity for editing
+		accession = repository.findOne(c.getNum());
 	}
+	else {
+		accession = c;
+	}
+	cancel.setVisible(persisted);
 
-	public final void editAccession(Accession c) {
-		if (c == null) {
-			setVisible(false);
-			return;
-		}
-		final boolean persisted = c.getNum() != null;
-		if (persisted) {
-			// Find fresh entity for editing
-			accession = repository.findOne(c.getNum());
-		}
-		else {
-			accession = c;
-		}
-		cancel.setVisible(persisted);
+        // Bind customer properties to similarly named fields
+	// Could also use annotation or "manual binding" or programmatically
+	// moving values from fields to entities before saving
+	binder.setBean(accession);
 
-		// Bind customer properties to similarly named fields
-		// Could also use annotation or "manual binding" or programmatically
-		// moving values from fields to entities before saving
-		binder.setBean(accession);
-
-		setVisible(true);
+	setVisible(true);
 
 		// A hack to ensure the whole form is visible
-		save.focus();
-		// Select all text in firstName field automatically
-		genotype.selectAll();
-	}
+	save.focus();
+	// Select all text in firstName field automatically
+	genotype.selectAll();
+    }
 
-	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either save or delete
-		// is clicked
-		save.addClickListener(e -> h.onChange());
-		delete.addClickListener(e -> h.onChange());
-	}
+    public void setChangeHandler(ChangeHandler h) {
+	// ChangeHandler is notified when either save or delete
+	// is clicked
+	save.addClickListener(e -> h.onChange());
+	delete.addClickListener(e -> h.onChange());
+    }
 }
