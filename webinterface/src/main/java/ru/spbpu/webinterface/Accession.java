@@ -16,37 +16,37 @@ import javax.persistence.Id;
 @Entity
 public class Accession {
     @Id
-	@GeneratedValue
-	private Long num;
+    @GeneratedValue
+    private Long num;
+	
+    private String genotype;
 
-	private String genotype;
+    private String env;
 
-	private String env;
+    protected Accession() {
+    }
 
-	protected Accession() {
-	}
+    public Accession(String genotype, String env) {
+	this.genotype = genotype;
+	this.env = env;
+    }
 
-	public Accession(String genotype, String env) {
-		this.genotype = genotype;
-		this.env = env;
-	}
+    public Long getNum() {
+	return num;
+    }
 
-	public Long getNum() {
-		return num;
-	}
+    public String getGenotype() {
+	return genotype;
+    }
 
-	public String getGenotype() {
-		return genotype;
-	}
+    public String getEnv() {
+	return env;
+    }
 
-	public String getEnv() {
-		return env;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Accession[num=%d, genotype='%s', env='%s']", num,
-				genotype, env);
-	}
+    @Override
+    public String toString() {
+	return String.format("Accession[num=%d, genotype='%s', env='%s']", num,
+			genotype, env);
+    }
 
 }

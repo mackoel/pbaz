@@ -3,6 +3,7 @@
   <persistence-unit name="ru.spbpu_webinterface_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
         <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
         <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/pbaz"/>
@@ -10,6 +11,5 @@
         <property name="hibernate.connection.password" value="pbaz"/>
         <property name="hibernate.hbm2ddl.auto" value="none"/>
     </properties>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>

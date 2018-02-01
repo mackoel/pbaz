@@ -8,6 +8,7 @@ package ru.spbpu.webinterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -23,7 +24,8 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author kkozlov
  */
-@SpringUI
+@SpringUI(path="/pbaz")
+@Theme("valo")
 public class VaadinUI extends UI {
     private final AccessionRepository repo;
 
