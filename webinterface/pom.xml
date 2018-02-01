@@ -99,10 +99,42 @@
             <version>1.5.9.RELEASE</version>
             <type>pom</type>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.vaadin.external.gwt/gwt -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
+        <groupId>com.vaadin.external.gwt</groupId>
             <artifactId>gwt</artifactId>
-            <version>2.8.2</version>
+            <version>2.7.0.vaadin6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+        <groupId>com.vaadin.external.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>2.7.0.vaadin6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+        <groupId>com.vaadin.external.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.7.0.vaadin6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+        <groupId>com.vaadin.external.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>2.7.0.vaadin6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <version>8.3.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+            <version>8.3.0</version>
             <type>pom</type>
         </dependency>
         <dependency>
@@ -116,6 +148,11 @@
             <artifactId>dcharts-widget</artifactId>
             <version>1.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>8.3.0</version>
+           </dependency>
     </dependencies>
 
     <!-- tag::bom[] -->
@@ -134,6 +171,54 @@
 
     <build>
         <plugins>
+            <!--
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.7.0</version>
+                <configuration>
+                    <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+                    <webappDirectory>
+                        ${basedir}/src/main/webapp/VAADIN/widgetsets
+                    </webappDirectory>
+                    <hostedWebapp>
+                        ${basedir}/src/main/webapp/VAADIN/widgetsets
+                    </hostedWebapp>
+                    <noServer>true</noServer>
+                    <draftCompile>true</draftCompile>
+                    <compileReport>false</compileReport>
+                    <style>DETAILED</style>
+                    <runTarget>http://localhost:8080/</runTarget>
+                </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>resources</goal>
+                        <goal>compile</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+                    -->
+                    <!--
+            <plugin>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-maven-plugin</artifactId>
+            <version>8.3.0</version>
+            <executions>
+                <execution>
+                    <configuration>
+                        <modules>
+                            <module>org.dussan.vaadin.dcharts.DchartsWidgetset</module>
+                        </modules>
+                    </configuration>
+                    <goals>
+                        <goal>update-widgetset</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

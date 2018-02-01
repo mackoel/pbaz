@@ -5,6 +5,9 @@
  */
 package ru.spbpu.webinterface;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
@@ -32,23 +35,26 @@ import java.util.List;
  *
  * @author kkozlov
  */
+//@Widgetset("com.company.OurWidgetSet")
 @SpringComponent
 @UIScope
 public class AccessionHistogram extends VerticalLayout {
     private final AccessionRepository repository;
     
+    private static final Logger log = LoggerFactory.getLogger(AccessionHistogram.class);
+    
     List<Accession> accessionList;
     Binder<Accession> binder = new Binder<>(Accession.class);
-    DCharts chart;
+    DCharts chart = new DCharts();
     
     @Autowired
     public AccessionHistogram(AccessionRepository repository) {
     	this.repository = repository;
-        chart = new DCharts();
-        addComponent(chart);
+
+        addComponents(chart);
 
 	// bind using naming convention
-	binder.bindInstanceFields(this);
+	// binder.bindInstanceFields(this);
 
 	// Configure and style components
 	setSpacing(true);
@@ -65,10 +71,17 @@ public class AccessionHistogram extends VerticalLayout {
             accessionList = repository.findByGenotypeStartsWithIgnoreCase(filterText);
 	}
         
-	if (accessionList == null) {
-		setVisible(false);
-		return;
+//	if (accessionList == null) {
+//		setVisible(false);
+//		return;
+//	}
+
+        log.info("Accessions found for Histogram:");
+	log.info("-------------------------------");
+	for (Accession accession : accessionList) {
+            log.info(accession.toString());
 	}
+	log.info("");
 
         DataSeries dataSeries = new DataSeries()
             .add(1, 5, 8, 2, 3);

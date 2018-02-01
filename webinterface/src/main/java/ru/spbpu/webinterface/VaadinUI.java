@@ -52,9 +52,10 @@ public class VaadinUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+//        @VaadinServletConfiguration(productionMode = false, ui = TesterUI.class, widgetset="com.example.tester.widgetset.TesterWidgetset")
 		// build layout
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn, histogramBtn);
-        VerticalLayout mainLayout = new VerticalLayout(actions, grid, editor);
+        VerticalLayout mainLayout = new VerticalLayout(actions, grid, editor, hist);
         setContent(mainLayout);
 
         grid.setHeight(300, Unit.PIXELS);
