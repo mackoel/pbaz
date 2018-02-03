@@ -44,11 +44,11 @@ public class Application {
 			log.info("");
 
 			// fetch an individual customer by ID
-			Accession accession = repository.findOne(1L);
-			log.info("Accession found with findOne(1L):");
-			log.info("--------------------------------");
-			log.info(accession.toString());
-			log.info("");
+			//Accession accession = repository.findOne(1L);
+			//log.info("Accession found with findOne(1L):");
+			//log.info("--------------------------------");
+			//log.info(accession.toString());
+			//log.info("");
 
 			// fetch customers by last name
 			log.info("Accession found with findByGenotypeStartsWithIgnoreCase('Sirna'):");
