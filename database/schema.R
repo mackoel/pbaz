@@ -191,6 +191,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_flowerColor", data.frame(
+		level = 1:8,
+		explanation = c('белая', 'светло-розовая', 'розовая', 'сиренево-розовая', 'фиолетово-розовая', 'красно-фиолетовая', 'голубая', 'желто-зелёная')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_stemColor (
 		level INTEGER PRIMARY KEY,
@@ -198,6 +204,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_stemColor", data.frame(
+		level = 1:8,
+		explanation = c('белая', 'светло-розовая', 'розовая', 'сиренево-розовая', 'фиолетово-розовая', 'красно-фиолетовая', 'голубая', 'желто-зелёная')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -209,6 +221,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_bushShape", data.frame(
+		level = c(1, 3, 5, 7),
+		explanation = c('стелющаяся', 'развалистая', 'стоячая (раскидистая вверху)', 'стоячая (комактная)')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_leafSize (
 		level INTEGER PRIMARY KEY,
@@ -216,6 +234,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_leafSize", data.frame(
+		level = c(1, 3, 5, 7, 9),
+		explanation = c('очень мелкие (<9 мм)', 'мелкие (9 - 11)', 'средние (12-15)', 'крупные (16-20)', 'очень крупные (> 20)')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -227,6 +251,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_peduncleColor", data.frame(
+		level = c(1, 7),
+		explanation = c('зелёная', 'антоциановая')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_ascDamage (
 		level INTEGER PRIMARY KEY,
@@ -234,6 +264,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_ascDamage", data.frame(
+		level = c(1, 3, 5, 7, 9),
+		explanation = c('очень слабое', 'слабое', 'среднее', 'сильное', 'очень сильное (эта шкала применяется при ежегодной полевой оценке).')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -245,6 +281,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_stemBranchning", data.frame(
+		level = c(1, 3, 5, 7, 9),
+		explanation = c('чень слабая (1-2)', 'слабая (2-3)', 'средняя (3-4)', 'сильная (4-5)', 'очень сильная (> 5)')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_stemBranch1Length (
 		level INTEGER PRIMARY KEY,
@@ -252,6 +294,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_stemBranch1Length", data.frame(
+		level = c(3, 5, 7),
+		explanation = c('короче', 'равны', 'длиннее')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -263,6 +311,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_stemBranch1BranchingType", data.frame(
+		level = c(1, 3, 5, 7),
+		explanation = c('прикорневое', 'в нижней половине стебля', 'в верхней половине стебля', 'по всему стеблю')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_stemBranch2BranchingType (
 		level INTEGER PRIMARY KEY,
@@ -270,6 +324,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_stemBranch2BranchingType", data.frame(
+		level = c(1, 3, 5, 7),
+		explanation = c('в нижнем ярусе', 'в среднем ярусе', 'в верхнем ярусе', 'во всех ярусах')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -281,6 +341,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_PSH", data.frame(
+		level = c(1, 2),
+		explanation = c('<  10%', '> 10%')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_PodSH (
 		level INTEGER PRIMARY KEY,
@@ -288,6 +354,12 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_PodSH", data.frame(
+		level = c(3, 5, 7),
+		explanation = c('удлинённо-овальная', 'грушевидная', 'ромбическая')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -299,6 +371,12 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_PDH", data.frame(
+		level = c(1, 2),
+		explanation = c('<  10%', '> 10%')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession_levels_SSH (
 		level INTEGER PRIMARY KEY,
@@ -306,6 +384,27 @@ SQL <- c(
 	)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_SSH", data.frame(
+		level = c(3, 5, 7),
+		explanation = c('угловатая (голова барана)', 'промежуточная (голова совы)', 'гороховидная')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_SCO (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_SCO", data.frame(
+		level = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+		explanation = c('белая', 'желто-розовая', 'розовая', 'желтая', 'серая', 'темно-зеленая', 'светло-зеленая', 'оранжевая', 'рыжая', 'коричневая', 'светло-коричневая', 'красно-коричневая', 'красно-фиолетовая', 'черная')),
+		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
@@ -403,6 +502,7 @@ dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PSH) REFERENCES ac
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PodSH) REFERENCES accession_levels_PodSH(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PDH) REFERENCES accession_levels_PDH(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SSH) REFERENCES accession_levels_SSH(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SCO) REFERENCES accession_levels_SCO(level)")
 
 SQL <- c(
 	"CREATE TABLE accession_metadata (
