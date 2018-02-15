@@ -408,6 +408,21 @@ SQL <- sqlAppendTable(conn, "accession_levels_SCO", data.frame(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"CREATE TABLE accession_levels_lodging (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "accession_levels_lodging", data.frame(
+		level = c(1, 2, 3, 4, 5),
+		explanation = c('tiny', 'small', 'not big', 'big', 'huge')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
 		genotype VARCHAR(64),
@@ -451,6 +466,8 @@ SQL <- c(
 		TSW FLOAT,
 		Protein FLOAT,
 		Oil FLOAT,
+		fiber FLOAT,
+		lodging INTEGER,
 		env VARCHAR(64),
 		spot VARCHAR(64)
 	)"
@@ -503,6 +520,7 @@ dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PodSH) REFERENCES 
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PDH) REFERENCES accession_levels_PDH(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SSH) REFERENCES accession_levels_SSH(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SCO) REFERENCES accession_levels_SCO(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (lodging) REFERENCES accession_levels_lodging(level)")
 
 SQL <- c(
 	"CREATE TABLE accession_metadata (
@@ -543,7 +561,8 @@ accession_meta <- data.frame(id = 1:28, name = c(
 	'PDH',  # 25
 	'SSH',  # 26
 	'SCO',  # 27
-	'TSW'   # 28
+	'TSW',   # 28
+	'lodging' # 29
 	),
 		explanation = c(
 			'Цветок - окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная', # 1
@@ -573,7 +592,8 @@ accession_meta <- data.frame(id = 1:28, name = c(
 			'Растрескиваемость бобов, балл. 1 <  10%;  2 > 10%',  # 25
 			'Семя - форма, балл. 3 - угловатая (голова барана); 5 - промежуточная (голова совы); 7 - гороховидная',  # 26
 			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная',  # 27
-			'Масса 1000 семян, г'),  # 28
+			'Масса 1000 семян, г', # 28
+			'полегание, балл: 1 - 5'),  # 29
 		units = c(
 			'INTEGER',  # 1
 			'INTEGER',  # 2
@@ -602,7 +622,8 @@ accession_meta <- data.frame(id = 1:28, name = c(
 			'INTEGER',  # 25
 			'INTEGER',  # 26
 			'INTEGER',  # 27
-			'FLOAT'   # 28
+			'FLOAT',   # 28
+			'INTEGER'  # 29
 		)
 )
 
