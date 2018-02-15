@@ -149,6 +149,17 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"CREATE TABLE crop_names (
+		id SERIAL PRIMARY KEY,
+		short_name VARCHAR(64),
+		latin_name VARCHAR(64),
+		russian_name VARCHAR(64)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
 		genotype VARCHAR(64),
@@ -228,7 +239,8 @@ SQL <- c(
 		SCO INTEGER,
 		TSW FLOAT,
 		env VARCHAR(64),
-		spot VARCHAR(64)
+		spot VARCHAR(64),
+		crop_name_id INTEGER
 	)"
 )
 
@@ -253,9 +265,134 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"ALTER TABLE accession ADD FOREIGN KEY (crop_name_id) REFERENCES crop_names(id)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE INDEX gtindex ON accession (genotype)"
 )
 
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE INDEX vrindex ON accession (variety)"
+)
+
+dbSendStatement(conn, SQL)
+
+
+SQL <- c(
+	"CREATE INDEX crindex ON accession (crop_name_id)"
+)
+
+dbSendStatement(conn, SQL)
+
+
+SQL <- c(
+	"CREATE TABLE accession_metadata (
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(64),
+		explanation VARCHAR(4096),
+		units VARCHAR(64)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+accession_meta <- data.frame(id = 1:65, name = c(
+	'flowerColor',  # 1
+	'stemColor',  # 2
+	'bushShape',  # 3
+	'leafSize',  # 4
+	'peduncleColor',  # 5
+	'ascDamage',  # 6
+	'stemBranchning',  # 7
+	'stemBranch1Length',  # 8
+	'stemBranch1BranchingType',  # 9
+	'stemBranch2BranchingType',  # 10
+	'PSH',  # 11 beanBeadiness
+	'Ptht',  # 13
+	'Hlp',  # 18
+	'Byld',  # 23
+	'WpWp',  # 28
+	'PPP',  # 33
+	'SPP',  # 38
+	'SPD',  # 43
+	'SYDP',  # 44
+	'SYDS',  # 45
+	'PodSH',  # 50
+	'PodPed',  # 51
+	'PDL',  # 52
+	'PDW',  # 57
+	'PDH',  # 62
+	'SSH',  # 63
+	'SCO',  # 64
+	'TSW'   # 65
+	),
+		explanation = c(
+			'Цветок - окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',
+			'Стебель окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',
+			'Куст - форма, балл. 1 - стелющаяся; 3 - развалистая; 5 - стоячая (раскидистая вверху); 7 - стоячая (комактная)',
+			'Лист - размер листочков (балл). 1 - очень мелкие (<9 мм); 3- мелкие (9 - 11);   5 - средние (12-15); 7 - крупные (16-20);  9 - очень крупные (> 20)',
+			'Цветоножка (окраска), балл. 3 - зелёная; 7 - антоциановая',
+			'Аскохитоз (поражение), балл. 1- очень слабое; 3 - слабое; 5 - среднее; 7- сильное; 9-очень сильное (эта шкала применяется при ежегодной полевой оценке).',
+			'Стебель- ветвистость (балл). 1 - очень слабая (1-2); 3 - слабая (2-3); 5 - средняя (3-4); 7 - сильная (4-5); 9 - очень сильная (> 5)',
+			'Стебель -  длина ветвей 1-го порядка, балл. 3 - короче; 5 - равны; 7 - длиннее',
+			'Стебель - характер ветвления (ветви 1-го порядка), балл. 1 - прикорневое; 3 - в нижней половине стебля; 5 - в верхней половине стебля; 7 - по всему стеблю',
+			'Стебель - характер ветвления (ветви 2-го порядка), балл. 1 - в нижнем ярусе; 3 - в среднем ярусе; 5 - в верхнем ярусе; 7 -  во всех ярусах',
+			'Осыпаемость бобов, балл. 1 <  10%; 2 > 10%',
+			'Высота растений (см)',
+			'Стебель -высота прикрепления нижнего боба, см',
+			'Вес всего растения (с бобами), г',
+			'Вес растения без бобов, г',
+			'Число бобов с 1-го растения, шт',
+			'Число семян с 1-го растения',
+			'Число семян в бобе',
+			'Вес семян с делянки, г',
+			'Вес семян с 1-го растения, г',
+			'Боб - форма, балл. 3 - удлинённо-овальная; 5 - грушевидная; 7 - ромбическая',
+			'Число бобов на плодоножке',
+			'Боб - длина, мм',
+			'Боб - ширина боба, мм',
+			'Растрескиваемость бобов, балл. 1 <  10%;  2 > 10%',
+			'Семя - форма, балл. 3 - угловатая (голова барана); 5 - промежуточная (голова совы); 7 - гороховидная',
+			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная ',
+			'Масса 1000 семян, г'),
+		units = c(
+			'INTEGER',  # 1
+			'INTEGER',  # 2
+			'INTEGER',  # 3
+			'INTEGER',  # 4
+			'INTEGER',  # 5
+			'INTEGER',  # 6
+			'INTEGER',  # 7
+			'INTEGER',  # 8
+			'INTEGER',  # 9
+			'INTEGER',  # 10
+			'INTEGER',  # 11
+			'FLOAT',  # 13
+			'FLOAT',  # 18
+			'FLOAT',  # 23
+			'FLOAT',  # 28
+			'INTEGER',  # 33
+			'INTEGER',  # 38
+			'INTEGER',  # 43
+			'FLOAT',  # 44
+			'FLOAT',  # 45
+			'INTEGER',  # 50
+			'INTEGER',  # 51
+			'FLOAT',  # 52
+			'FLOAT',  # 57
+			'INTEGER',  # 62
+			'INTEGER',  # 63
+			'INTEGER',  # 64
+			'FLOAT'   # 65
+		)
+)
+
+SQL <- sqlAppendTable(conn, "accession_metadata", accession_meta, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
