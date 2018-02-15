@@ -1,14 +1,47 @@
 SQL <- c(
+	"CREATE TABLE crop_names (
+		id SERIAL PRIMARY KEY,
+		short_name VARCHAR(64),
+		latin_name VARCHAR(64),
+		russian_name VARCHAR(64)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+crop_nam <- data.frame(id = 1:4,
+	short_name = c('chickpea', 'wild chickpea', 'domestic chickpea', 'soybean'),
+	latin_name = c('Cicer', 'Cicer reticulanum', 'Cicer arietinum', 'Glycine max'),
+	russian_name = c('нут', 'нут дикий', 'нут культурный', 'соя'))
+
+SQL <- sqlAppendTable(conn, "crop_names", crop_nam, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE TABLE variety (
 		name VARCHAR(64) PRIMARY KEY,
 		catnumber VARCHAR(32),
 		origin_country VARCHAR(64),
 		origin_region VARCHAR(64),
-		colyear INTEGER
+		colyear INTEGER,
+		crop_name_id INTEGER NOT NULL DEFAULT 1
 	)"
 )
 
 dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"ALTER TABLE variety ADD FOREIGN KEY (crop_name_id) REFERENCES crop_names(id)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE INDEX crindex ON variety(crop_name_id)"
+)
+
+dbSendStatement(conn, SQL)
+
 
 SQL <- c(
 	"CREATE TABLE location (
@@ -150,17 +183,6 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE TABLE crop_names (
-		id SERIAL PRIMARY KEY,
-		short_name VARCHAR(64),
-		latin_name VARCHAR(64),
-		russian_name VARCHAR(64)
-	)"
-)
-
-dbSendStatement(conn, SQL)
-
-SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
 		genotype VARCHAR(64),
@@ -205,8 +227,7 @@ SQL <- c(
 		Protein FLOAT,
 		Oil FLOAT,
 		env VARCHAR(64),
-		spot VARCHAR(64),
-		crop_name_id INTEGER
+		spot VARCHAR(64)
 	)"
 )
 
@@ -231,12 +252,6 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"ALTER TABLE accession ADD FOREIGN KEY (crop_name_id) REFERENCES crop_names(id)"
-)
-
-dbSendStatement(conn, SQL)
-
-SQL <- c(
 	"CREATE INDEX gtindex ON accession (genotype)"
 )
 
@@ -247,14 +262,6 @@ SQL <- c(
 )
 
 dbSendStatement(conn, SQL)
-
-
-SQL <- c(
-	"CREATE INDEX crindex ON accession (crop_name_id)"
-)
-
-dbSendStatement(conn, SQL)
-
 
 SQL <- c(
 	"CREATE TABLE accession_metadata (
