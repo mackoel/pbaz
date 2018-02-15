@@ -201,6 +201,8 @@ SQL <- c(
 		SSH INTEGER,
 		SCO INTEGER,
 		TSW FLOAT,
+		Protein FLOAT,
+		Oil FLOAT,
 		env VARCHAR(64),
 		spot VARCHAR(64),
 		crop_name_id INTEGER
