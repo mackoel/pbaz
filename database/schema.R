@@ -2,7 +2,8 @@ SQL <- c(
 	"CREATE TABLE variety (
 		name VARCHAR(64) PRIMARY KEY,
 		catnumber VARCHAR(32),
-		origin VARCHAR(64),
+		origin_country VARCHAR(64),
+		origin_region VARCHAR(64),
 		colyear INTEGER
 	)"
 )

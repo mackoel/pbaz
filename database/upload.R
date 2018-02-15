@@ -126,7 +126,7 @@ ii <- !duplicated(pd[, 5])
 NN <- sum(ii)
 
 vdf <- data.frame(cbind(c(pd[ii, 5], "ICCV96029"), c(rep(0, NN), 1), c(pd[ii, 7], "USA"), c(rep(1900, NN), 2017)))
-colnames(vdf) <- c('name', 'catnumber',  'origin', 'colyear')
+colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear')
 SQL <- sqlAppendTable(conn, "variety", vdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
@@ -360,8 +360,8 @@ qg <- lapply(2:mgt, FUN = function(cc) {
 	ancs = unlist(strsplit(ngt[cc], "_"))
 	tryCatch(
 		{
-			cat(paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", ancs[1], "',", 0, ',', "'tab'", ',', 1900, ")"), '\n')
-			dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", ancs[1], "',", 0, ',', "'tab'", ',', 1900, ")"))
+			cat(paste0("INSERT INTO variety (name, catnumber, origin_country, colyear) values ('", ancs[1], "',", 0, ',', "'tab'", ',', 1900, ")"), '\n')
+			dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin_country, colyear) values ('", ancs[1], "',", 0, ',', "'tab'", ',', 1900, ")"))
 		},
         error=function(cond) {
             message(cond)
@@ -385,8 +385,8 @@ qg <- lapply(2:mgt, FUN = function(cc) {
     )
 	tryCatch(
 		{
-			cat(paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", paste(ancs[c(-1, -2)], sep = "_", collapse = "_"), "',", 0, ',', "tab", ',', 1900, ")"), '\n')
-			dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", paste(ancs[c(-1, -2)], sep = "_", collapse = "_"), "',", 0, ',', "'tab'", ',', 1900, ")"))
+			cat(paste0("INSERT INTO variety (name, catnumber, origin_country, colyear) values ('", paste(ancs[c(-1, -2)], sep = "_", collapse = "_"), "',", 0, ',', "tab", ',', 1900, ")"), '\n')
+			dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin_country, colyear) values ('", paste(ancs[c(-1, -2)], sep = "_", collapse = "_"), "',", 0, ',', "'tab'", ',', 1900, ")"))
 		},
         error=function(cond) {
             message(cond)
@@ -472,7 +472,7 @@ ret <- lapply(availdat, FUN = function(a) {
 	cat(a, '\n')
 	tryCatch(
 	    {
-		dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin, colyear) values ('", a, "',", 0, ',', "'ctab'", ',', 1900, ")"))
+		dbSendStatement(conn, paste0("INSERT INTO variety (name, catnumber, origin_country, colyear) values ('", a, "',", 0, ',', "'ctab'", ',', 1900, ")"))
 	    },
 	    error = function(cond) { message(cond); return(NA) },
 	    warning = function(cond) { message(cond); return(NULL)},
