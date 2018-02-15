@@ -183,6 +183,132 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"CREATE TABLE accession_levels_flowerColor (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_stemColor (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_bushShape (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_leafSize (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_peduncleColor (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_ascDamage (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_stemBranchning (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_stemBranch1Length (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_stemBranch1BranchingType (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_stemBranch2BranchingType (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_PSH (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_PodSH (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_PDH (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE accession_levels_SSH (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
 		genotype VARCHAR(64),
@@ -263,6 +389,21 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (flowerColor) REFERENCES accession_levels_flowerColor(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemColor) REFERENCES accession_levels_stemColor(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (bushShape) REFERENCES accession_levels_bushShape(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (leafSize) REFERENCES accession_levels_leafSize(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (peduncleColor) REFERENCES accession_levels_peduncleColor(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (ascDamage) REFERENCES accession_levels_ascDamage(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranchning) REFERENCES accession_levels_stemBranchning(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch1Length) REFERENCES accession_levels_stemBranch1Length(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch1BranchingType) REFERENCES accession_levels_stemBranch1BranchingType(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch2BranchingType) REFERENCES accession_levels_stemBranch2BranchingType(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PSH) REFERENCES accession_levels_PSH(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PodSH) REFERENCES accession_levels_PodSH(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PDH) REFERENCES accession_levels_PDH(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SSH) REFERENCES accession_levels_SSH(level)")
+
 SQL <- c(
 	"CREATE TABLE accession_metadata (
 		id SERIAL PRIMARY KEY,
@@ -305,34 +446,34 @@ accession_meta <- data.frame(id = 1:28, name = c(
 	'TSW'   # 28
 	),
 		explanation = c(
-			'Цветок - окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',
-			'Стебель окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',
-			'Куст - форма, балл. 1 - стелющаяся; 3 - развалистая; 5 - стоячая (раскидистая вверху); 7 - стоячая (комактная)',
-			'Лист - размер листочков (балл). 1 - очень мелкие (<9 мм); 3- мелкие (9 - 11);   5 - средние (12-15); 7 - крупные (16-20);  9 - очень крупные (> 20)',
-			'Цветоножка (окраска), балл. 3 - зелёная; 7 - антоциановая',
-			'Аскохитоз (поражение), балл. 1- очень слабое; 3 - слабое; 5 - среднее; 7- сильное; 9-очень сильное (эта шкала применяется при ежегодной полевой оценке).',
-			'Стебель- ветвистость (балл). 1 - очень слабая (1-2); 3 - слабая (2-3); 5 - средняя (3-4); 7 - сильная (4-5); 9 - очень сильная (> 5)',
-			'Стебель -  длина ветвей 1-го порядка, балл. 3 - короче; 5 - равны; 7 - длиннее',
-			'Стебель - характер ветвления (ветви 1-го порядка), балл. 1 - прикорневое; 3 - в нижней половине стебля; 5 - в верхней половине стебля; 7 - по всему стеблю',
-			'Стебель - характер ветвления (ветви 2-го порядка), балл. 1 - в нижнем ярусе; 3 - в среднем ярусе; 5 - в верхнем ярусе; 7 -  во всех ярусах',
-			'Осыпаемость бобов, балл. 1 <  10%; 2 > 10%',
-			'Высота растений (см)',
-			'Стебель -высота прикрепления нижнего боба, см',
-			'Вес всего растения (с бобами), г',
-			'Вес растения без бобов, г',
-			'Число бобов с 1-го растения, шт',
-			'Число семян с 1-го растения',
-			'Число семян в бобе',
-			'Вес семян с делянки, г',
-			'Вес семян с 1-го растения, г',
-			'Боб - форма, балл. 3 - удлинённо-овальная; 5 - грушевидная; 7 - ромбическая',
-			'Число бобов на плодоножке',
-			'Боб - длина, мм',
-			'Боб - ширина боба, мм',
-			'Растрескиваемость бобов, балл. 1 <  10%;  2 > 10%',
-			'Семя - форма, балл. 3 - угловатая (голова барана); 5 - промежуточная (голова совы); 7 - гороховидная',
-			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная',
-			'Масса 1000 семян, г'),
+			'Цветок - окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная', # 1
+			'Стебель окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',  # 2
+			'Куст - форма, балл. 1 - стелющаяся; 3 - развалистая; 5 - стоячая (раскидистая вверху); 7 - стоячая (комактная)',  # 3
+			'Лист - размер листочков (балл). 1 - очень мелкие (<9 мм); 3- мелкие (9 - 11);   5 - средние (12-15); 7 - крупные (16-20);  9 - очень крупные (> 20)',  # 4
+			'Цветоножка (окраска), балл. 3 - зелёная; 7 - антоциановая', # 5
+			'Аскохитоз (поражение), балл. 1- очень слабое; 3 - слабое; 5 - среднее; 7- сильное; 9-очень сильное (эта шкала применяется при ежегодной полевой оценке).',  # 6
+			'Стебель- ветвистость (балл). 1 - очень слабая (1-2); 3 - слабая (2-3); 5 - средняя (3-4); 7 - сильная (4-5); 9 - очень сильная (> 5)', # 7
+			'Стебель -  длина ветвей 1-го порядка, балл. 3 - короче; 5 - равны; 7 - длиннее',  # 8
+			'Стебель - характер ветвления (ветви 1-го порядка), балл. 1 - прикорневое; 3 - в нижней половине стебля; 5 - в верхней половине стебля; 7 - по всему стеблю',  # 9
+			'Стебель - характер ветвления (ветви 2-го порядка), балл. 1 - в нижнем ярусе; 3 - в среднем ярусе; 5 - в верхнем ярусе; 7 -  во всех ярусах', # 10
+			'Осыпаемость бобов, балл. 1 <  10%; 2 > 10%',  # 11
+			'Высота растений (см)',  # 12
+			'Стебель -высота прикрепления нижнего боба, см',  # 13
+			'Вес всего растения (с бобами), г',  # 14
+			'Вес растения без бобов, г',  # 15
+			'Число бобов с 1-го растения, шт',  # 16
+			'Число семян с 1-го растения',  # 17
+			'Число семян в бобе',  # 18
+			'Вес семян с делянки, г',  # 19
+			'Вес семян с 1-го растения, г',  # 20
+			'Боб - форма, балл. 3 - удлинённо-овальная; 5 - грушевидная; 7 - ромбическая',  # 21
+			'Число бобов на плодоножке',  # 22
+			'Боб - длина, мм',  # 23
+			'Боб - ширина боба, мм',  # 24
+			'Растрескиваемость бобов, балл. 1 <  10%;  2 > 10%',  # 25
+			'Семя - форма, балл. 3 - угловатая (голова барана); 5 - промежуточная (голова совы); 7 - гороховидная',  # 26
+			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная',  # 27
+			'Масса 1000 семян, г'),  # 28
 		units = c(
 			'INTEGER',  # 1
 			'INTEGER',  # 2
