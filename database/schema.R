@@ -183,57 +183,20 @@ SQL <- c(
 		stemBranch1Length INTEGER,
 		stemBranch1BranchingType INTEGER,
 		stemBranch2BranchingType INTEGER,
-		beanBeadiness INTEGER,
-		beanCracking INTEGER,
-		Ptht_1 FLOAT,
-		Ptht_2 FLOAT,
-		Ptht_3 FLOAT,
-		Ptht_4 FLOAT,
-		Ptht_5 FLOAT,
-		Hlp_1 FLOAT,
-		Hlp_2 FLOAT,
-		Hlp_3 FLOAT,
-		Hlp_4 FLOAT,
-		Hlp_5 FLOAT,
-		Byld_1 FLOAT,
-		Byld_2 FLOAT,
-		Byld_3 FLOAT,
-		Byld_4 FLOAT,
-		Byld_5 FLOAT,
-		WpWp_1 FLOAT,
-		WpWp_2 FLOAT,
-		WpWp_3 FLOAT,
-		WpWp_4 FLOAT,
-		WpWp_5 FLOAT,
-		PPP_1 INTEGER,
-		PPP_2 INTEGER,
-		PPP_3 INTEGER,
-		PPP_4 INTEGER,
-		PPP_5 INTEGER,
-		SPP_1 INTEGER,
-		SPP_2 INTEGER,
-		SPP_3 INTEGER,
-		SPP_4 INTEGER,
-		SPP_5 INTEGER,
-		SPD_1 INTEGER,
-		SYDP_1 FLOAT,
-		SYDS_1 FLOAT,
-		SYDS_2 FLOAT,
-		SYDS_3 FLOAT,
-		SYDS_4 FLOAT,
-		SYDS_5 FLOAT,
+		PSH INTEGER,
+		Ptht FLOAT,
+		Hlp FLOAT,
+		Byld FLOAT,
+		WpWp FLOAT,
+		PPP INTEGER,
+		SPP INTEGER,
+		SPD INTEGER,
+		SYDP FLOAT,
+		SYDS FLOAT,
 		PodSH INTEGER,
 		PodPed INTEGER,
-		PDL_1 FLOAT,
-		PDL_2 FLOAT,
-		PDL_3 FLOAT,
-		PDL_4 FLOAT,
-		PDL_5 FLOAT,
-		PDW_1 FLOAT,
-		PDW_2 FLOAT,
-		PDW_3 FLOAT,
-		PDW_4 FLOAT,
-		PDW_5 FLOAT,
+		PDL FLOAT,
+		PDW FLOAT,
 		PDH INTEGER,
 		SSH INTEGER,
 		SCO INTEGER,
@@ -301,7 +264,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-accession_meta <- data.frame(id = 1:65, name = c(
+accession_meta <- data.frame(id = 1:28, name = c(
 	'flowerColor',  # 1
 	'stemColor',  # 2
 	'bushShape',  # 3
@@ -313,23 +276,23 @@ accession_meta <- data.frame(id = 1:65, name = c(
 	'stemBranch1BranchingType',  # 9
 	'stemBranch2BranchingType',  # 10
 	'PSH',  # 11 beanBeadiness
-	'Ptht',  # 13
-	'Hlp',  # 18
-	'Byld',  # 23
-	'WpWp',  # 28
-	'PPP',  # 33
-	'SPP',  # 38
-	'SPD',  # 43
-	'SYDP',  # 44
-	'SYDS',  # 45
-	'PodSH',  # 50
-	'PodPed',  # 51
-	'PDL',  # 52
-	'PDW',  # 57
-	'PDH',  # 62
-	'SSH',  # 63
-	'SCO',  # 64
-	'TSW'   # 65
+	'Ptht',  # 12
+	'Hlp',  # 13
+	'Byld',  # 14
+	'WpWp',  # 15
+	'PPP',  # 16
+	'SPP',  # 17
+	'SPD',  # 18
+	'SYDP',  # 19
+	'SYDS',  # 20
+	'PodSH',  # 21
+	'PodPed',  # 22
+	'PDL',  # 23
+	'PDW',  # 24
+	'PDH',  # 25
+	'SSH',  # 26
+	'SCO',  # 27
+	'TSW'   # 28
 	),
 		explanation = c(
 			'Цветок - окраска, балл. 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная',
@@ -372,23 +335,23 @@ accession_meta <- data.frame(id = 1:65, name = c(
 			'INTEGER',  # 9
 			'INTEGER',  # 10
 			'INTEGER',  # 11
+			'FLOAT',  # 12
 			'FLOAT',  # 13
-			'FLOAT',  # 18
+			'FLOAT',  # 14
+			'FLOAT',  # 15
+			'INTEGER',  # 16
+			'INTEGER',  # 17
+			'INTEGER',  # 18
+			'FLOAT',  # 19
+			'FLOAT',  # 20
+			'INTEGER',  # 21
+			'INTEGER',  # 22
 			'FLOAT',  # 23
-			'FLOAT',  # 28
-			'INTEGER',  # 33
-			'INTEGER',  # 38
-			'INTEGER',  # 43
-			'FLOAT',  # 44
-			'FLOAT',  # 45
-			'INTEGER',  # 50
-			'INTEGER',  # 51
-			'FLOAT',  # 52
-			'FLOAT',  # 57
-			'INTEGER',  # 62
-			'INTEGER',  # 63
-			'INTEGER',  # 64
-			'FLOAT'   # 65
+			'FLOAT',  # 24
+			'INTEGER',  # 25
+			'INTEGER',  # 26
+			'INTEGER',  # 27
+			'FLOAT'   # 28
 		)
 )
 

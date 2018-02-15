@@ -36,7 +36,13 @@ generate_tag_prefs=0
 external_dirs=
 
 [files]
-current_page=0
+current_page=4
+FILE_NAME_0=882;Java;0;EUTF-8;1;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fwebinterface%2Fsrc%2Fmain%2Fjava%2Fru%2Fspbpu%2Fwebinterface%2FApplication.java;0;4
+FILE_NAME_1=0;Java;0;EUTF-8;1;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fwebinterface%2Fsrc%2Fmain%2Fjava%2Fru%2Fspbpu%2Fwebinterface%2FAccessionRepository.java;0;4
+FILE_NAME_2=1096;Java;0;EUTF-8;2;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fwebinterface%2Fsrc%2Fmain%2Fjava%2Fru%2Fspbpu%2Fwebinterface%2FAccessionHistogram.java;0;4
+FILE_NAME_3=0;Java;0;EUTF-8;2;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fwebinterface%2Fsrc%2Fmain%2Fjava%2Fru%2Fspbpu%2Fwebinterface%2FAccession.java;0;4
+FILE_NAME_4=3334;R;0;EUTF-8;1;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fdatabase%2Fschema.R;0;4
+FILE_NAME_5=0;R;0;EUTF-8;2;1;1;%2Fmnt%2Fspace%2Fkkozlov%2FProjects%2Fpbaz%2Fdatabase%2Fupload.R;0;4
 
 [VTE]
-last_dir=/mnt/space/kkozlov/Projects/pbaz
+last_dir=/storage3/kkozlov/Calcs/chickpea

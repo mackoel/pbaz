@@ -164,7 +164,7 @@ apply(pd[-c(which(pd$flowering75 == ""), which(is.na(pd$flowering75)), which(is.
 		format.Date(as.Date(r[15], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[16], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[38], "'KOS_2017'", sep = ',')
-	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, maturityStart, maturityFull, flowerColor, bushShape, Ptht_1, Hlp_1, PPP_1, PDW_1, PDL_1, SPD_1, SCO, TSW, SYDP_1, PDH, PodPed, env) VALUES (", dat, ")")
+	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
 	cat(qu, '\n')
 #	odb.write(ODB, qu)
 	dbSendStatement(conn, qu)
@@ -194,7 +194,7 @@ apply(pd[c(which(pd$flowering75 == ""), which(is.na(pd$flowering75))),], 1, FUN=
 		format.Date(as.Date(r[15], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[16], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[38], "'KOS_2017'", sep = ',')
-	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, maturityStart, maturityFull, flowerColor, bushShape, Ptht_1, Hlp_1, PPP_1, PDW_1, PDL_1, SPD_1, SCO, TSW, SYDP_1, PDH, PodPed, env) VALUES (", dat, ")")
+	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
 	cat(qu, '\n')
 #	odb.write(ODB, qu)
 	dbSendStatement(conn, qu)
