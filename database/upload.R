@@ -215,48 +215,34 @@ NL <- sum(nlevels(kgl$DD),
 		nlevels(kgl$E),
 		nlevels(kgl$E.))
 
-rp5lev <- data.frame(id = 1:NL, name = c(rep('DD', nlevels(kgl$DD)),
-	rep('N', nlevels(kgl$N)),
-	rep('WW', nlevels(kgl$WW)),
-	rep('W1', nlevels(kgl$W1)),
-	rep('W2', nlevels(kgl$W2)),
-	rep('Cl', nlevels(kgl$Cl)),
-	rep('Nh', nlevels(kgl$Nh)),
-	rep('H', nlevels(kgl$H)),
-	rep('Cm', nlevels(kgl$Cm)),
-	rep('Ch', nlevels(kgl$Ch)),
-	rep('E', nlevels(kgl$E)),
-	rep('E1', nlevels(kgl$E.))
-	),
-	explanation = c(levels(kgl$DD),
-		levels(kgl$N),
-		levels(kgl$WW),
-		levels(kgl$W1),
-		levels(kgl$W2),
-		levels(kgl$Cl),
-		levels(kgl$Nh),
-		levels(kgl$H),
-		levels(kgl$Cm),
-		levels(kgl$Ch),
-		levels(kgl$E),
-		levels(kgl$E.)),
-	level = c(seq(1:nlevels(kgl$DD)),
-		seq(1:nlevels(kgl$N)),
-		seq(1:nlevels(kgl$WW)),
-		seq(1:nlevels(kgl$W1)),
-		seq(1:nlevels(kgl$W2)),
-		seq(1:nlevels(kgl$Cl)),
-		seq(1:nlevels(kgl$Nh)),
-		seq(1:nlevels(kgl$H)),
-		seq(1:nlevels(kgl$Cm)),
-		seq(1:nlevels(kgl$Ch)),
-		seq(1:nlevels(kgl$E)),
-		seq(1:nlevels(kgl$E.))
-	)
-)
-
 SQL <- sqlAppendTable(conn, "rp5levels", rp5lev, row.names = FALSE)
 dbSendStatement(conn, SQL)
+
+SQL <- sqlAppendTable(conn, "rp5levels_DD", data.frame(level = c(seq(1:nlevels(kgl$DD))), explanation = c(levels(kgl$DD))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_N", data.frame(level = c(seq(1:nlevels(kgl$N))), explanation = c(levels(kgl$N))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_WW", data.frame(level = c(seq(1:nlevels(kgl$WW))), explanation = c(levels(kgl$WW))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_W1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_W2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_Cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_Nh", data.frame(level = c(seq(1:nlevels(kgl$Nh))), explanation = c(levels(kgl$Nh))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_H", data.frame(level = c(seq(1:nlevels(kgl$H))), explanation = c(levels(kgl$H))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_Cm", data.frame(level = c(seq(1:nlevels(kgl$Cm))), explanation = c(levels(kgl$Cm))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_Ch", data.frame(level = c(seq(1:nlevels(kgl$Ch))), explanation = c(levels(kgl$Ch))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_E", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+SQL <- sqlAppendTable(conn, "rp5levels_E1", data.frame(level = c(seq(1:nlevels(kgl$E1))), explanation = c(levels(kgl$E1))), row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 #odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
 
 kgl$DD <- as.numeric(kgl$DD)

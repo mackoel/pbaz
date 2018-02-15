@@ -331,7 +331,7 @@ accession_meta <- data.frame(id = 1:28, name = c(
 			'Боб - ширина боба, мм',
 			'Растрескиваемость бобов, балл. 1 <  10%;  2 > 10%',
 			'Семя - форма, балл. 3 - угловатая (голова барана); 5 - промежуточная (голова совы); 7 - гороховидная',
-			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная ',
+			'Семя - окраска семенной кожуры, балл. 1 - белая; 2 - желто-розовая; 3- розовая; 4 - желтая; 5 - серая; 6 - темно-зеленая; 7 - светло-зеленая; 8  - оранжевая; 9 - рыжая; 10 - коричневая; 11 - светло-коричневая; 12 - красно-коричневая; 13 красно-фиолетовая; 14 - черная',
 			'Масса 1000 семян, г'),
 		units = c(
 			'INTEGER',  # 1
@@ -562,11 +562,108 @@ SQL <- sqlAppendTable(conn, "rp5metadata", rp5meta, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE TABLE rp5levels (
-		id SERIAL PRIMARY KEY,
-		name VARCHAR(64),
-		explanation VARCHAR(4096),
-		level INTEGER
+	"CREATE TABLE rp5levels_DD (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_N (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_WW (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_W1 (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_W2 (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_Cl (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_Nh (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_H (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_Cm (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_Ch (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_E (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
+	)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
+	"CREATE TABLE rp5levels_E1 (
+		level INTEGER PRIMARY KEY,
+		explanation VARCHAR(4096)
 	)"
 )
 
@@ -615,6 +712,18 @@ SQL <- c(
 )
 
 dbSendStatement(conn, SQL)
+
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (DD) REFERENCES rp5levels_DD(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (N) REFERENCES rp5levels_N(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (WW) REFERENCES rp5levels_WW(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (W1) REFERENCES rp5levels_W1(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (W2) REFERENCES rp5levels_W2(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (Cl) REFERENCES rp5levels_Cl(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (Nh) REFERENCES rp5levels_Nh(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (Cm) REFERENCES rp5levels_Cm(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (Ch) REFERENCES rp5levels_Ch(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (E) REFERENCES rp5levels_E(level)")
+dbSendStatement(conn, "ALTER TABLE rp5data ADD FOREIGN KEY (E1) REFERENCES rp5levels_E1(level)")
 
 SQL <- c(
 	"CREATE INDEX tspindex ON rp5data (tsp)"
