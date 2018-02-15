@@ -29,11 +29,6 @@ public class Application {
 	public CommandLineRunner loadData(AccessionRepository repository) {
 		return (args) -> {
 			// save a couple of customers
-//			repository.save(new Accession("Jack", "Bauer"));
-//			repository.save(new Accession("Chloe", "O'Brian"));
-//			repository.save(new Accession("Kim", "Bauer"));
-//			repository.save(new Accession("David", "Palmer"));
-//			repository.save(new Accession("Michelle", "Dessler"));
 
 			// fetch all customers
 			log.info("Accessions found with findAll():");

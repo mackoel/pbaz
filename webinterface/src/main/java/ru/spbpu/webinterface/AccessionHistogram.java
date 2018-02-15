@@ -35,18 +35,17 @@ import java.util.List;
  *
  * @author kkozlov
  */
-//@Widgetset("com.company.OurWidgetSet")
 @SpringComponent
 @UIScope
 public class AccessionHistogram extends VerticalLayout {
     private final AccessionRepository repository;
-    
+
     private static final Logger log = LoggerFactory.getLogger(AccessionHistogram.class);
-    
+
     List<Accession> accessionList;
     Binder<Accession> binder = new Binder<>(Accession.class);
     DCharts chart = new DCharts();
-    
+
     @Autowired
     public AccessionHistogram(AccessionRepository repository) {
     	this.repository = repository;
@@ -58,19 +57,19 @@ public class AccessionHistogram extends VerticalLayout {
 
 	// Configure and style components
 	setSpacing(true);
-        
+
         setVisible(false);
     }
-    
+
     public final void plotHistogramAccession(String filterText) {
-               
+
         if (StringUtils.isEmpty(filterText)) {
             accessionList = repository.findAll();
 	}
 	else {
             accessionList = repository.findByGenotypeStartsWithIgnoreCase(filterText);
 	}
-        
+
 //	if (accessionList == null) {
 //		setVisible(false);
 //		return;

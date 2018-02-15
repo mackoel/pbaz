@@ -18,10 +18,10 @@ detect_indent_width=false
 indent_mode=2
 
 [project]
-name=spur
-base_path=/storage2/kkozlov/Repos/pbaz
+name=pbaz
+base_path=/mnt/space/kkozlov/Projects/pbaz
 description=
-file_patterns=*.R;
+file_patterns=*.R;*.java;*.xml;
 
 [long line marker]
 long_line_behaviour=1
@@ -36,12 +36,7 @@ generate_tag_prefs=0
 external_dirs=
 
 [files]
-current_page=4
-FILE_NAME_0=2237;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fschema.R;0;4
-FILE_NAME_1=23744;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fupload.R;0;4
-FILE_NAME_2=2432;R;0;EUTF-8;2;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Finterface.R;0;4
-FILE_NAME_3=173;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fconnection.R;0;4
-FILE_NAME_4=215;R;0;EUTF-8;1;1;1;%2Fstorage2%2Fkkozlov%2FRepos%2Fpbaz%2Fexamples.R;0;4
+current_page=0
 
 [VTE]
-last_dir=/storage3/kkozlov/Calcs/chickpea
+last_dir=/mnt/space/kkozlov/Projects/pbaz
