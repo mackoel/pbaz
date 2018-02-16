@@ -226,7 +226,7 @@ SQL <- sqlAppendTable(conn, "rp5levels_ww", data.frame(level = c(seq(1:nlevels(k
 dbSendStatement(conn, SQL)
 SQL <- sqlAppendTable(conn, "rp5levels_w1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
 dbSendStatement(conn, SQL)
-SQL <- sqlAppendTable(conn, "rp5levels_2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+SQL <- sqlAppendTable(conn, "rp5levels_w2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
 dbSendStatement(conn, SQL)
 SQL <- sqlAppendTable(conn, "rp5levels_cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
 dbSendStatement(conn, SQL)
@@ -240,7 +240,7 @@ SQL <- sqlAppendTable(conn, "rp5levels_ch", data.frame(level = c(seq(1:nlevels(k
 dbSendStatement(conn, SQL)
 SQL <- sqlAppendTable(conn, "rp5levels_e", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
 dbSendStatement(conn, SQL)
-SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E1))), explanation = c(levels(kgl$E1))), row.names = FALSE)
+SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E.))), explanation = c(levels(kgl$E.))), row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 #odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
