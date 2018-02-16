@@ -191,7 +191,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_flowerColor", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_flowercolor", data.frame(
 		level = 1:8,
 		explanation = c('белая', 'светло-розовая', 'розовая', 'сиренево-розовая', 'фиолетово-розовая', 'красно-фиолетовая', 'голубая', 'желто-зелёная')),
 		row.names = FALSE)
@@ -206,7 +206,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_stemColor", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_stemcolor", data.frame(
 		level = 1:8,
 		explanation = c('белая', 'светло-розовая', 'розовая', 'сиренево-розовая', 'фиолетово-розовая', 'красно-фиолетовая', 'голубая', 'желто-зелёная')),
 		row.names = FALSE)
@@ -221,7 +221,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_bushShape", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_bushshape", data.frame(
 		level = c(1, 3, 5, 7),
 		explanation = c('стелющаяся', 'развалистая', 'стоячая (раскидистая вверху)', 'стоячая (комактная)')),
 		row.names = FALSE)
@@ -236,7 +236,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_leafSize", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_leafsize", data.frame(
 		level = c(1, 3, 5, 7, 9),
 		explanation = c('очень мелкие (<9 мм)', 'мелкие (9 - 11)', 'средние (12-15)', 'крупные (16-20)', 'очень крупные (> 20)')),
 		row.names = FALSE)
@@ -251,7 +251,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_peduncleColor", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_pedunclecolor", data.frame(
 		level = c(1, 7),
 		explanation = c('зелёная', 'антоциановая')),
 		row.names = FALSE)
@@ -266,14 +266,14 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_ascDamage", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_ascdamage", data.frame(
 		level = c(1, 3, 5, 7, 9),
 		explanation = c('очень слабое', 'слабое', 'среднее', 'сильное', 'очень сильное (эта шкала применяется при ежегодной полевой оценке).')),
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE TABLE accession_levels_stemBranchning (
+	"CREATE TABLE accession_levels_stemBranching (
 		level INTEGER PRIMARY KEY,
 		explanation VARCHAR(4096)
 	)"
@@ -281,14 +281,14 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_stemBranchning", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_stembranching", data.frame(
 		level = c(1, 3, 5, 7, 9),
 		explanation = c('чень слабая (1-2)', 'слабая (2-3)', 'средняя (3-4)', 'сильная (4-5)', 'очень сильная (> 5)')),
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE TABLE accession_levels_stemBranch1Length (
+	"CREATE TABLE accession_levels_stemBranch1length (
 		level INTEGER PRIMARY KEY,
 		explanation VARCHAR(4096)
 	)"
@@ -296,14 +296,14 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_stemBranch1Length", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_stembranch1length", data.frame(
 		level = c(3, 5, 7),
 		explanation = c('короче', 'равны', 'длиннее')),
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE TABLE accession_levels_stemBranch1BranchingType (
+	"CREATE TABLE accession_levels_stembranch1branchingtype (
 		level INTEGER PRIMARY KEY,
 		explanation VARCHAR(4096)
 	)"
@@ -311,7 +311,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_stemBranch1BranchingType", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_stembranch1branchingtype", data.frame(
 		level = c(1, 3, 5, 7),
 		explanation = c('прикорневое', 'в нижней половине стебля', 'в верхней половине стебля', 'по всему стеблю')),
 		row.names = FALSE)
@@ -326,7 +326,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_stemBranch2BranchingType", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_stembranch2branchingtype", data.frame(
 		level = c(1, 3, 5, 7),
 		explanation = c('в нижнем ярусе', 'в среднем ярусе', 'в верхнем ярусе', 'во всех ярусах')),
 		row.names = FALSE)
@@ -341,7 +341,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_PSH", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_psh", data.frame(
 		level = c(1, 2),
 		explanation = c('<  10%', '> 10%')),
 		row.names = FALSE)
@@ -356,7 +356,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_PodSH", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_podsh", data.frame(
 		level = c(3, 5, 7),
 		explanation = c('удлинённо-овальная', 'грушевидная', 'ромбическая')),
 		row.names = FALSE)
@@ -371,9 +371,9 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_PDH", data.frame(
-		level = c(1, 2),
-		explanation = c('<  10%', '> 10%')),
+SQL <- sqlAppendTable(conn, "accession_levels_pdh", data.frame(
+		level = c(0, 1, 2),
+		explanation = c('0', '<  10%', '> 10%')),
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
@@ -386,7 +386,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_SSH", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_ssh", data.frame(
 		level = c(3, 5, 7),
 		explanation = c('угловатая (голова барана)', 'промежуточная (голова совы)', 'гороховидная')),
 		row.names = FALSE)
@@ -401,7 +401,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-SQL <- sqlAppendTable(conn, "accession_levels_SCO", data.frame(
+SQL <- sqlAppendTable(conn, "accession_levels_sco", data.frame(
 		level = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
 		explanation = c('белая', 'желто-розовая', 'розовая', 'желтая', 'серая', 'темно-зеленая', 'светло-зеленая', 'оранжевая', 'рыжая', 'коричневая', 'светло-коричневая', 'красно-коричневая', 'красно-фиолетовая', 'черная')),
 		row.names = FALSE)
@@ -533,7 +533,7 @@ SQL <- c(
 
 dbSendStatement(conn, SQL)
 
-accession_meta <- data.frame(id = 1:28, name = c(
+accession_meta <- data.frame(id = 1:29, name = c(
 	'flowerColor',  # 1
 	'stemColor',  # 2
 	'bushShape',  # 3
