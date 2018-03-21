@@ -598,3 +598,245 @@ ret <- lapply(availdat, FUN = function(a) {
 			cat(' GOOD \n')
 	    }
 })
+
+
+pd <- read.csv('kos_2017.csv', header = 1, stringsAsFactors = FALSE)
+
+pd <- pd[, -c(84, 85, 86)]
+
+#"ancright","inseriesnum",
+#,"Number.sowing.seeds","Number.of.rows"
+
+colnames(pd) <- c("X","spot","catnumber","variety","origin","sowing","seedlings10","seedlings75","flowering10","flowering75", "floweringFin", "maturityStart","maturityFull","Sowing...the.beginning.seedlings.days.",
+"Beginning.seedlings...the.beginning.of.flowering..days.",
+"Beginning.seedlings...full.of.flowering..days.",
+"Beginning.of.flowering...full.of.flowering..days.",
+"Beginning.of.flowering...the.beginning.of.ripening..days.",
+"Beginning.seedlings...the.beginning.of.ripening..days.",
+"Beginning.seedlings...full.maturation..days.",
+"The.beginning.of.ripening...full.maturation..days.",
+"flowerColour",
+"stemColor",
+"bushShape",
+"leafSize",
+"peduncleColor",
+"ascDamage",
+"stemBranchning",
+"stemBranch1Length",
+"stemBranch1BranchingType",
+"stemBranch2BranchingType",
+"PSH",
+"PDH",
+'Ptht.1','Ptht.2','Ptht.3','Ptht.4','Ptht.5','Hlp.1','Hlp.2','Hlp.3','Hlp.4','Hlp.5','Byld.1','Byld.2','Byld.3','Byld.4','Byld.5','WpWp.1','WpWp.2','WpWp.3','WpWp.4','WpWp.5','PPP.1','PPP.2','PPP.3','PPP.4','PPP.5','SPP.1','SPP.2','SPP.3','SPP.4','SPP.5','SYDS.1','SYDS.2','SYDS.3','SYDS.4','SYDS.5','PodSH','PDL.1','PDL.2','PDL.3','PDL.4','PDL.5','PDW.1','PDW.2','PDW.3','PDW.4','PDW.5','SSH','SCO','TSW','NsamplesColl')
+
+# SPD_1 - number of seeds per pod
+# SYDP_1 - weight.of.seeds.per.plot..g
+# PodPed - Number.of.pod.per.Peduncle
+
+#pd$seedlings10[grep(",",pd$seedlings10)] <- format.Date(as.Date(pd$seedlings10[grep(",",pd$seedlings10)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$seedlings75 <- as.character(pd$seedlings75)
+#pd$seedlings75[grep(",",pd$seedlings75)] <- format.Date(as.Date(pd$seedlings75[grep(",",pd$seedlings75)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$flowering10 <- as.character(pd$flowering10)
+#pd$flowering10[grep(",",pd$flowering10)] <- format.Date(as.Date(pd$flowering10[grep(",",pd$flowering10)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$flowering75 <- as.character(pd$flowering75)
+#pd$flowering75[grep(",",pd$flowering75)] <- format.Date(as.Date(pd$flowering75[grep(",",pd$flowering75)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$maturityStart <- as.character(pd$maturityStart)
+#pd$maturityStart[grep(",",pd$maturityStart)] <- format.Date(as.Date(pd$maturityStart[grep(",",pd$maturityStart)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$maturityFull <- as.character(pd$maturityFull)
+#pd$maturityFull[grep(",",pd$maturityFull)] <- format.Date(as.Date(pd$maturityFull[grep(",",pd$maturityFull)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+# 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная
+
+pd[pd == "нет"] <- NA
+pd[pd == "Нет растений"] <- NA
+pd[pd == "нет растений"] <- NA
+pd[pd == "нет всходов"] <- NA
+pd[pd == "Нет всходов"] <- NA
+pd[pd == ""] <- NA
+
+#unique(pd$flowerColour)
+# "нет"          "Нет растений"
+# "нет всходов"  "1.2"          "7"            "нет растений"
+
+pd$flowerColour[pd$flowerColour == "1.2"] <- 2
+
+unique(pd$"stemColor")
+unique(pd$"bushShape")
+unique(pd$"leafSize")
+unique(pd$"peduncleColor")
+unique(pd$"ascDamage")
+unique(pd$"stemBranchning")
+unique(pd$"stemBranch1Length")
+unique(pd$"stemBranch1BranchingType")
+unique(pd$"stemBranch2BranchingType")
+unique(pd$"PSH")
+unique(pd$"PDH")
+unique(pd$"flowering75")
+
+ii <- !duplicated(pd[, 4])
+
+NN <- sum(ii)
+
+vdf <- data.frame(cbind(pd[ii, 4], pd[ii, 3], pd[ii, 5], rep(1900, NN)))
+colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear')
+SQL <- sqlAppendTable(conn, "variety", vdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+apply(pd, 1, FUN=function(r) {
+    for(isn in 1:5) {
+	gt <- paste0("'", r[4], "'")
+	dat <- gsub("NA", "NULL", paste(isn,
+		format.Date(as.Date(r[6], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[7], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[8], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[9], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[10], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[11], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[12], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[13], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+
+		r[22], r[23], r[24], r[25], r[26], r[27], r[29], r[30], r[31], r[32], r[33],
+		r[33 + isn], r[38 + isn], r[43 + isn], r[48 + isn], r[53 + isn], r[58 + isn], r[63 + isn], r[69], r[69 + isn], r[74 + isn],
+		r[80], r[81], r[82],
+
+		r[2], "'KOS_2017'", sep = ','))
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
+	Ptht, Hlp, Byld, WpWp, PPP, SPP, SYDS, PodSH, PDL, PDW,
+	SSH, SCO, TSW, spot, env) VALUES (", gt, ',', dat, ")")
+	cat(qu, '\n')
+	dbSendStatement(conn, qu)
+    }
+})
+
+
+pd <- read.csv('kos_2016.csv', header = 1, stringsAsFactors = FALSE)
+
+#"ancright","inseriesnum",
+#,"Number.sowing.seeds","Number.of.rows"
+
+colnames(pd) <- c("X","spot","origin","catnumber","variety","sowing","seedlings10","seedlings75","flowering10","flowering75", "floweringFin", "maturityStart","maturityFull","Sowing...the.beginning.seedlings.days.",
+"Beginning.seedlings...the.beginning.of.flowering..days.",
+"Beginning.seedlings...full.of.flowering..days.",
+"Beginning.of.flowering...full.of.flowering..days.",
+"Beginning.of.flowering...the.beginning.of.ripening..days.",
+"Beginning.seedlings...the.beginning.of.ripening..days.",
+"Beginning.seedlings...full.maturation..days.",
+"The.beginning.of.ripening...full.maturation..days.",
+"flowerColour",
+"stemColor",
+"bushShape",
+"leafSize",
+"peduncleColor",
+"ascDamage","ascResistance",
+"stemBranchning",
+"stemBranch1Length",
+"stemBranch1BranchingType",
+"stemBranch2BranchingType",
+"PSH",
+"PDH",
+'Ptht.1','Ptht.2','Ptht.3','Ptht.4','Ptht.5','Hlp.1','Hlp.2','Hlp.3','Hlp.4','Hlp.5','Byld.1','Byld.2','Byld.3','Byld.4','Byld.5','WpWp.1','WpWp.2','WpWp.3','WpWp.4','WpWp.5','PPP.1','PPP.2','PPP.3','PPP.4','PPP.5','SPP.1','SPP.2','SPP.3','SPP.4','SPP.5','SYDS.1','SYDS.2','SYDS.3','SYDS.4','SYDS.5','PodSH','PDL.1','PDL.2','PDL.3','PDL.4','PDL.5','PDW.1','PDW.2','PDW.3','PDW.4','PDW.5','SSH','SCO','TSW')
+
+# SPD_1 - number of seeds per pod
+# SYDP_1 - weight.of.seeds.per.plot..g
+# PodPed - Number.of.pod.per.Peduncle
+
+#pd$seedlings10[grep(",",pd$seedlings10)] <- format.Date(as.Date(pd$seedlings10[grep(",",pd$seedlings10)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$seedlings75 <- as.character(pd$seedlings75)
+#pd$seedlings75[grep(",",pd$seedlings75)] <- format.Date(as.Date(pd$seedlings75[grep(",",pd$seedlings75)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$flowering10 <- as.character(pd$flowering10)
+#pd$flowering10[grep(",",pd$flowering10)] <- format.Date(as.Date(pd$flowering10[grep(",",pd$flowering10)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$flowering75 <- as.character(pd$flowering75)
+#pd$flowering75[grep(",",pd$flowering75)] <- format.Date(as.Date(pd$flowering75[grep(",",pd$flowering75)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$maturityStart <- as.character(pd$maturityStart)
+#pd$maturityStart[grep(",",pd$maturityStart)] <- format.Date(as.Date(pd$maturityStart[grep(",",pd$maturityStart)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+##pd$maturityFull <- as.character(pd$maturityFull)
+#pd$maturityFull[grep(",",pd$maturityFull)] <- format.Date(as.Date(pd$maturityFull[grep(",",pd$maturityFull)],format="%d,%m,%Y"),format="%m/%d/%Y")
+
+# 1 - белая; 2 - светло-розовая; 3- розовая; 4 - сиренево-розовая; 5 - фиолетово-розовая; 6 - красно-фиолетовая; 7 - голубая; 8  - желто - зелёная
+
+pd[pd == "нет"] <- NA
+pd[pd == "Нет растений"] <- NA
+pd[pd == "нет растений"] <- NA
+pd[pd == "нет всходов"] <- NA
+pd[pd == "Нет всходов"] <- NA
+pd[pd == ""] <- NA
+
+#unique(pd$flowerColour)
+# "нет"          "Нет растений"
+# "нет всходов"  "1.2"          "7"            "нет растений"
+
+pd$flowerColour[pd$flowerColour == "1.2"] <- 2
+
+unique(pd$flowerColour)
+unique(pd$"stemColor")
+unique(pd$"bushShape")
+unique(pd$"leafSize")
+unique(pd$"peduncleColor")
+unique(pd$"ascDamage")
+unique(pd$"stemBranchning")
+unique(pd$"stemBranch1Length")
+unique(pd$"stemBranch1BranchingType")
+unique(pd$"stemBranch2BranchingType")
+unique(pd$"PSH")
+unique(pd$"PDH")
+unique(pd$"flowering75")
+
+ii <- !duplicated(pd[, 5])
+
+NN <- sum(ii)
+
+vdf <- data.frame(cbind(pd[ii, 5], pd[ii, 4], pd[ii, 3], rep(1900, NN)))
+colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear')
+SQL <- sqlAppendTable(conn, "variety", vdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+envdf <- data.frame(envname="KOS_2016",
+		location = "KOS",
+		year = "2016")
+
+SQL <- sqlAppendTable(conn, "environment", envdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+
+apply(pd, 1, FUN=function(r) {
+    for(isn in 1:5) {
+	gt <- paste0("'", r[5], "'")
+	dat <- gsub("NA", "NULL", paste(isn,
+		format.Date(as.Date(r[6], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[7], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[8], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[9], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[10], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[11], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[12], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[13], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
+
+		r[22], r[23], r[24], r[25], r[26], r[27], r[30], r[31], r[32], r[33], r[34],
+		r[34 + isn], r[39 + isn], r[44 + isn], r[49 + isn], r[54 + isn], r[59 + isn], r[64 + isn], r[70], r[70 + isn], r[75 + isn],
+		r[81], r[82], r[83],
+
+		r[2], "'KOS_2016'", sep = ','))
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
+	Ptht, Hlp, Byld, WpWp, PPP, SPP, SYDS, PodSH, PDL, PDW,
+	SSH, SCO, TSW, spot, env) VALUES (", gt, ',', dat, ")")
+	cat(qu, '\n')
+	dbSendStatement(conn, qu)
+    }
+})
+
+
+#apply(vdf, 1, FUN=function(r) {
+#    qu <- paste0("delete from accession where variety = '", r[1], "'")
+#    dbSendStatement(conn, qu)
+#})
+

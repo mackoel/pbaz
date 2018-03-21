@@ -101,3 +101,4 @@ get_gt_cnum <- function(conn, ofl, gt_like = '%', gt_limit = -1, cn_like = '%', 
     write.csv(ret.df, file = ofl, row.names = TRUE)
     return(ret)
 }
+

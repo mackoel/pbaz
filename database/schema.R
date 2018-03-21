@@ -24,6 +24,7 @@ SQL <- c(
 		origin_country VARCHAR(64),
 		origin_region VARCHAR(64),
 		colyear INTEGER,
+		gtname VARCHAR(64),
 		crop_name_id INTEGER NOT NULL DEFAULT 1
 	)"
 )
@@ -183,6 +184,12 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"ALTER TABLE variety ADD FOREIGN KEY (gtname) REFERENCES genotype(name)"
+)
+
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE TABLE accession_levels_flowerColor (
 		level INTEGER PRIMARY KEY,
 		explanation VARCHAR(4096)
@@ -256,6 +263,14 @@ SQL <- sqlAppendTable(conn, "accession_levels_pedunclecolor", data.frame(
 		explanation = c('зелёная', 'антоциановая')),
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
+
+
+SQL <- sqlAppendTable(conn, "accession_levels_pedunclecolor", data.frame(
+		level = c(3),
+		explanation = c('белая')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 
 SQL <- c(
 	"CREATE TABLE accession_levels_ascDamage (
@@ -425,7 +440,6 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
-		genotype VARCHAR(64),
 		variety VARCHAR(64),
 		inseriesnum INTEGER,
 		sowing DATE,
@@ -442,7 +456,7 @@ SQL <- c(
 		leafSize INTEGER,
 		peduncleColor INTEGER,
 		ascDamage INTEGER,
-		stemBranchning INTEGER,
+		stemBranching INTEGER,
 		stemBranch1Length INTEGER,
 		stemBranch1BranchingType INTEGER,
 		stemBranch2BranchingType INTEGER,
@@ -471,12 +485,6 @@ SQL <- c(
 		env VARCHAR(64),
 		spot VARCHAR(64)
 	)"
-)
-
-dbSendStatement(conn, SQL)
-
-SQL <- c(
-	"ALTER TABLE accession ADD FOREIGN KEY (genotype) REFERENCES genotype(gname)"
 )
 
 dbSendStatement(conn, SQL)
@@ -511,7 +519,7 @@ dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (bushShape) REFEREN
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (leafSize) REFERENCES accession_levels_leafSize(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (peduncleColor) REFERENCES accession_levels_peduncleColor(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (ascDamage) REFERENCES accession_levels_ascDamage(level)")
-dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranchning) REFERENCES accession_levels_stemBranchning(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranching) REFERENCES accession_levels_stemBranching(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch1Length) REFERENCES accession_levels_stemBranch1Length(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch1BranchingType) REFERENCES accession_levels_stemBranch1BranchingType(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (stemBranch2BranchingType) REFERENCES accession_levels_stemBranch2BranchingType(level)")
@@ -656,7 +664,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW sowing_to_seedlings10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 			seedlings10 - sowing as sowingToSeedlings10,
 			Tmean as seedlings10Tmean,
 			Pmean as seedlings10Pmean,
@@ -673,7 +681,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW sowing_to_seedlings75
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 			seedlings10 - sowing as sowingToSeedlings75,
 			Tmean as seedlings75Tmean,
 			Pmean as seedlings75Pmean,
@@ -690,7 +698,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW seedlings75_to_flowering10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 			flowering10 - seedlings75 as seedlings75ToFlowering10,
 			Tmean as flowering10Tmean,
 			Pmean as flowering10Pmean,
@@ -707,7 +715,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW flowering75_to_maturityFull
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 			maturityFull - flowering75 as flowering75ToMaturityFull,
 			Tmean as maturityFullTmean,
 			Pmean as maturityFullPmean,
@@ -996,7 +1004,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW phase_transition_time
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		seedlings10 - sowing as sowingToSeedlings10,
 		seedlings75 - sowing as sowingToSeedlings75,
 		flowering10 - seedlings75 as seedlings75ToFlowering10,
@@ -1009,7 +1017,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_to_seedlings10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowingToSeedlings10,
 		SUM(case when T > 10 then T end) as T_sum10_sowingToSeedlings10,
 		SUM(case when T > 15 then T end) as T_sum15_sowingToSeedlings10,
@@ -1023,7 +1031,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1031,7 +1039,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_to_seedlings75
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowingToSeedlings75,
 		SUM(case when T > 10 then T end) as T_sum10_sowingToSeedlings75,
 		SUM(case when T > 15 then T end) as T_sum15_sowingToSeedlings75,
@@ -1045,7 +1053,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 #odb.write(ODB, SQL)
@@ -1054,7 +1062,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_to_flowering10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings75ToFlowering10,
 		SUM(case when T > 10 then T end) as T_sum10_seedlings75ToFlowering10,
 		SUM(case when T > 15 then T end) as T_sum15_seedlings75ToFlowering10,
@@ -1068,7 +1076,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) AND EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1076,7 +1084,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering75_to_maturityFull
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_flowering75ToMaturityFull,
 		SUM(case when T > 10 then T end) as T_sum10_flowering75ToMaturityFull,
 		SUM(case when T > 15 then T end) as T_sum15_flowering75ToMaturityFull,
@@ -1090,7 +1098,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering75) AND EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1116,7 +1124,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_5x5
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowing_5x5,
 		MAX(T) as T_max_sowing_5x5,
 		MIN(T) as T_min_sowing_5x5,
@@ -1126,7 +1134,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) - 5 AND EXTRACT(DOY FROM sowing) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1152,7 +1160,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_10x
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowing_10x,
 		MAX(T) as T_max_sowing_10x,
 		MIN(T) as T_min_sowing_10x,
@@ -1162,7 +1170,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) - 10 AND EXTRACT(DOY FROM sowing) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1188,7 +1196,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_5x5
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings10_5x5,
 		MAX(T) as T_max_seedlings10_5x5,
 		MIN(T) as T_min_seedlings10_5x5,
@@ -1198,7 +1206,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) - 5 AND EXTRACT(DOY FROM seedlings10) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1224,7 +1232,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_10x
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings10_10x,
 		MAX(T) as T_max_seedlings10_10x,
 		MIN(T) as T_min_seedlings10_10x,
@@ -1234,7 +1242,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) - 10 AND EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1260,7 +1268,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_5x5
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings75_5x5,
 		MAX(T) as T_max_seedlings75_5x5,
 		MIN(T) as T_min_seedlings75_5x5,
@@ -1270,7 +1278,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) - 5 AND EXTRACT(DOY FROM seedlings75) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1278,7 +1286,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_x10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings75_x10,
 		MAX(T) as T_max_seedlings75_x10,
 		MIN(T) as T_min_seedlings75_x10,
@@ -1288,7 +1296,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) AND EXTRACT(DOY FROM seedlings75) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1296,7 +1304,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_10x
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings75_10x,
 		MAX(T) as T_max_seedlings75_10x,
 		MIN(T) as T_min_seedlings75_10x,
@@ -1306,7 +1314,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) - 10 AND EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1332,7 +1340,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_5x5
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_flowering10_5x5,
 		MAX(T) as T_max_flowering10_5x5,
 		MIN(T) as T_min_flowering10_5x5,
@@ -1342,7 +1350,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) - 5 AND EXTRACT(DOY FROM flowering10) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1350,7 +1358,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_x10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_flowering10_x10,
 		MAX(T) as T_max_flowering10_x10,
 		MIN(T) as T_min_flowering10_x10,
@@ -1360,7 +1368,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) AND EXTRACT(DOY FROM flowering10) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1368,7 +1376,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_10x
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_flowering10_10x,
 		MAX(T) as T_max_flowering10_10x,
 		MIN(T) as T_min_flowering10_10x,
@@ -1378,7 +1386,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) - 10 AND EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1386,7 +1394,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_maturityFull,
 		MAX(T) as T_max_maturityFull,
 		MIN(T) as T_min_maturityFull,
@@ -1396,7 +1404,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1422,7 +1430,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_x10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_maturityFull_x10,
 		MAX(T) as T_max_maturityFull_x10,
 		MIN(T) as T_min_maturityFull_x10,
@@ -1432,7 +1440,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) AND EXTRACT(DOY FROM maturityFull) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1440,7 +1448,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_10x
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_maturityFull_10x,
 		MAX(T) as T_max_maturityFull_10x,
 		MIN(T) as T_min_maturityFull_10x,
@@ -1450,7 +1458,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) - 10 AND EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1458,7 +1466,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW clim_pheno
 	 as
-	 SELECT phase_transition_time.genotype, phase_transition_time.inseriesnum,
+	 SELECT phase_transition_time.variety, phase_transition_time.inseriesnum,
 		sowingToSeedlings10,
 		sowingToSeedlings75,
 		seedlings75ToFlowering10,
@@ -1625,53 +1633,53 @@ SQL <- c(
 		rp5_maturityFull_x10,
 		rp5_maturityFull_10x
 	WHERE
-		phase_transition_time.genotype = rp5_sowing_to_seedlings10.genotype AND
+		phase_transition_time.variety = rp5_sowing_to_seedlings10.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing_to_seedlings10.inseriesnum AND
-		phase_transition_time.genotype = rp5_sowing_to_seedlings75.genotype AND
+		phase_transition_time.variety = rp5_sowing_to_seedlings75.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing_to_seedlings75.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings75_to_flowering10.genotype AND
+		phase_transition_time.variety = rp5_seedlings75_to_flowering10.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings75_to_flowering10.inseriesnum AND
-		phase_transition_time.genotype = rp5_flowering75_to_maturityFull.genotype AND
+		phase_transition_time.variety = rp5_flowering75_to_maturityFull.variety AND
 		phase_transition_time.inseriesnum = rp5_flowering75_to_maturityFull.inseriesnum AND
-		phase_transition_time.genotype = rp5_sowing.genotype AND
+		phase_transition_time.variety = rp5_sowing.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing.inseriesnum AND
-		phase_transition_time.genotype = rp5_sowing_5x5.genotype AND
+		phase_transition_time.variety = rp5_sowing_5x5.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing_5x5.inseriesnum AND
-		phase_transition_time.genotype = rp5_sowing_x10.genotype AND
+		phase_transition_time.variety = rp5_sowing_x10.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing_x10.inseriesnum AND
-		phase_transition_time.genotype = rp5_sowing_10x.genotype AND
+		phase_transition_time.variety = rp5_sowing_10x.variety AND
 		phase_transition_time.inseriesnum = rp5_sowing_10x.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings10.genotype AND
+		phase_transition_time.variety = rp5_seedlings10.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings10.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings10_5x5.genotype AND
+		phase_transition_time.variety = rp5_seedlings10_5x5.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings10_5x5.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings10_x10.genotype AND
+		phase_transition_time.variety = rp5_seedlings10_x10.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings10_x10.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings10_10x.genotype AND
+		phase_transition_time.variety = rp5_seedlings10_10x.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings10_10x.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings75.genotype AND
+		phase_transition_time.variety = rp5_seedlings75.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings75.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings75_5x5.genotype AND
+		phase_transition_time.variety = rp5_seedlings75_5x5.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings75_5x5.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings75_x10.genotype AND
+		phase_transition_time.variety = rp5_seedlings75_x10.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings75_x10.inseriesnum AND
-		phase_transition_time.genotype = rp5_seedlings75_10x.genotype AND
+		phase_transition_time.variety = rp5_seedlings75_10x.variety AND
 		phase_transition_time.inseriesnum = rp5_seedlings75_10x.inseriesnum AND
-		phase_transition_time.genotype = rp5_flowering10.genotype AND
+		phase_transition_time.variety = rp5_flowering10.variety AND
 		phase_transition_time.inseriesnum = rp5_flowering10.inseriesnum AND
-		phase_transition_time.genotype = rp5_flowering10_5x5.genotype AND
+		phase_transition_time.variety = rp5_flowering10_5x5.variety AND
 		phase_transition_time.inseriesnum = rp5_flowering10_5x5.inseriesnum AND
-		phase_transition_time.genotype = rp5_flowering10_x10.genotype AND
+		phase_transition_time.variety = rp5_flowering10_x10.variety AND
 		phase_transition_time.inseriesnum = rp5_flowering10_x10.inseriesnum AND
-		phase_transition_time.genotype = rp5_flowering10_10x.genotype AND
+		phase_transition_time.variety = rp5_flowering10_10x.variety AND
 		phase_transition_time.inseriesnum = rp5_flowering10_10x.inseriesnum AND
-		phase_transition_time.genotype = rp5_maturityFull.genotype AND
+		phase_transition_time.variety = rp5_maturityFull.variety AND
 		phase_transition_time.inseriesnum = rp5_maturityFull.inseriesnum AND
-		phase_transition_time.genotype = rp5_maturityFull_5x5.genotype AND
+		phase_transition_time.variety = rp5_maturityFull_5x5.variety AND
 		phase_transition_time.inseriesnum = rp5_maturityFull_5x5.inseriesnum AND
-		phase_transition_time.genotype = rp5_maturityFull_x10.genotype AND
+		phase_transition_time.variety = rp5_maturityFull_x10.variety AND
 		phase_transition_time.inseriesnum = rp5_maturityFull_x10.inseriesnum AND
-		phase_transition_time.genotype = rp5_maturityFull_10x.genotype AND
+		phase_transition_time.variety = rp5_maturityFull_10x.variety AND
 		phase_transition_time.inseriesnum = rp5_maturityFull_10x.inseriesnum"
 )
 
