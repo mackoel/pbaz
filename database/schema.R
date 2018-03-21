@@ -437,11 +437,18 @@ SQL <- sqlAppendTable(conn, "accession_levels_lodging", data.frame(
 		row.names = FALSE)
 dbSendStatement(conn, SQL)
 
+SQL <- sqlAppendTable(conn, "accession_levels_treatment", data.frame(
+		level = c(0, 1, 2, 3, 4, 5),
+		explanation = c('none', 'drought', 'ww', 'tos 1', 'tos 2', 'tos 3')),
+		row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 SQL <- c(
 	"CREATE TABLE accession (
 		num SERIAL PRIMARY KEY,
 		variety VARCHAR(64),
 		inseriesnum INTEGER,
+		treatment_id INTEGER default 0,
 		sowing DATE,
 		seedlings10 DATE,
 		seedlings75 DATE,
@@ -529,6 +536,7 @@ dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (PDH) REFERENCES ac
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SSH) REFERENCES accession_levels_SSH(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (SCO) REFERENCES accession_levels_SCO(level)")
 dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (lodging) REFERENCES accession_levels_lodging(level)")
+dbSendStatement(conn, "ALTER TABLE accession ADD FOREIGN KEY (treatment) REFERENCES accession_levels_treatment(level)")
 
 SQL <- c(
 	"CREATE TABLE accession_metadata (

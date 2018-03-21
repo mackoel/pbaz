@@ -621,7 +621,7 @@ colnames(pd) <- c("X","spot","catnumber","variety","origin","sowing","seedlings1
 "leafSize",
 "peduncleColor",
 "ascDamage",
-"stemBranchning",
+"stemBranching",
 "stemBranch1Length",
 "stemBranch1BranchingType",
 "stemBranch2BranchingType",
@@ -670,7 +670,7 @@ unique(pd$"bushShape")
 unique(pd$"leafSize")
 unique(pd$"peduncleColor")
 unique(pd$"ascDamage")
-unique(pd$"stemBranchning")
+unique(pd$"stemBranching")
 unique(pd$"stemBranch1Length")
 unique(pd$"stemBranch1BranchingType")
 unique(pd$"stemBranch2BranchingType")
@@ -700,12 +700,12 @@ apply(pd, 1, FUN=function(r) {
 		format.Date(as.Date(r[12], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[13], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 
-		r[22], r[23], r[24], r[25], r[26], r[27], r[29], r[30], r[31], r[32], r[33],
+		r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33],
 		r[33 + isn], r[38 + isn], r[43 + isn], r[48 + isn], r[53 + isn], r[58 + isn], r[63 + isn], r[69], r[69 + isn], r[74 + isn],
 		r[80], r[81], r[82],
 
 		r[2], "'KOS_2017'", sep = ','))
-	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranching, stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
 	Ptht, Hlp, Byld, WpWp, PPP, SPP, SYDS, PodSH, PDL, PDW,
 	SSH, SCO, TSW, spot, env) VALUES (", gt, ',', dat, ")")
 	cat(qu, '\n')
@@ -733,7 +733,7 @@ colnames(pd) <- c("X","spot","origin","catnumber","variety","sowing","seedlings1
 "leafSize",
 "peduncleColor",
 "ascDamage","ascResistance",
-"stemBranchning",
+"stemBranching",
 "stemBranch1Length",
 "stemBranch1BranchingType",
 "stemBranch2BranchingType",
@@ -783,7 +783,7 @@ unique(pd$"bushShape")
 unique(pd$"leafSize")
 unique(pd$"peduncleColor")
 unique(pd$"ascDamage")
-unique(pd$"stemBranchning")
+unique(pd$"stemBranching")
 unique(pd$"stemBranch1Length")
 unique(pd$"stemBranch1BranchingType")
 unique(pd$"stemBranch2BranchingType")
@@ -821,12 +821,12 @@ apply(pd, 1, FUN=function(r) {
 		format.Date(as.Date(r[12], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[13], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 
-		r[22], r[23], r[24], r[25], r[26], r[27], r[30], r[31], r[32], r[33], r[34],
+		r[22], r[23], r[24], r[25], r[26], r[27], r[29], r[30], r[31], r[32], r[33], r[34],
 		r[34 + isn], r[39 + isn], r[44 + isn], r[49 + isn], r[54 + isn], r[59 + isn], r[64 + isn], r[70], r[70 + isn], r[75 + isn],
 		r[81], r[82], r[83],
 
 		r[2], "'KOS_2016'", sep = ','))
-	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, floweringFin, maturityStart, maturityFull, flowerColor,stemColor,bushShape,leafSize,peduncleColor,ascDamage,stemBranching,stemBranch1Length,stemBranch1BranchingType,stemBranch2BranchingType,PSH,PDH,
 	Ptht, Hlp, Byld, WpWp, PPP, SPP, SYDS, PodSH, PDL, PDW,
 	SSH, SCO, TSW, spot, env) VALUES (", gt, ',', dat, ")")
 	cat(qu, '\n')
