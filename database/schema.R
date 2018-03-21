@@ -509,12 +509,6 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
-	"CREATE INDEX gtindex ON accession (genotype)"
-)
-
-dbSendStatement(conn, SQL)
-
-SQL <- c(
 	"CREATE INDEX vrindex ON accession (variety)"
 )
 
@@ -1114,7 +1108,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowing,
 		MAX(T) as T_max_sowing,
 		MIN(T) as T_min_sowing,
@@ -1124,7 +1118,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM sowing) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1150,7 +1144,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_x10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_sowing_x10,
 		MAX(T) as T_max_sowing_x10,
 		MIN(T) as T_min_sowing_x10,
@@ -1160,7 +1154,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM sowing) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1186,7 +1180,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings10,
 		MAX(T) as T_max_seedlings10,
 		MIN(T) as T_min_seedlings10,
@@ -1196,7 +1190,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1222,7 +1216,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_x10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings10_x10,
 		MAX(T) as T_max_seedlings10_x10,
 		MIN(T) as T_min_seedlings10_x10,
@@ -1232,7 +1226,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) AND EXTRACT(DOY FROM seedlings10) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1258,7 +1252,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_seedlings75,
 		MAX(T) as T_max_seedlings75,
 		MIN(T) as T_min_seedlings75,
@@ -1268,7 +1262,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1330,7 +1324,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_flowering10,
 		MAX(T) as T_max_flowering10,
 		MIN(T) as T_min_flowering10,
@@ -1340,7 +1334,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
@@ -1420,7 +1414,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_5x5
 	 as
-	 SELECT genotype, inseriesnum,
+	 SELECT variety, inseriesnum,
 		AVG(T) as T_mean_maturityFull_5x5,
 		MAX(T) as T_max_maturityFull_5x5,
 		MIN(T) as T_min_maturityFull_5x5,
@@ -1430,7 +1424,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) - 5 AND EXTRACT(DOY FROM maturityFull) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
-		GROUP BY genotype, inseriesnum"
+		GROUP BY variety, inseriesnum"
 )
 
 dbSendStatement(conn, SQL)
