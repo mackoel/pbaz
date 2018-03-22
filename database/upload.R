@@ -1,23 +1,31 @@
+corrds <- data.frame(
+    locname = c("KOS", "Floreat", "Mt. Barker", "Ankara", "Urfa"),
+    lat = c(45.216313, -31.935988, -34.629784, 39.920777, 37.215282),
+    lon = c(40.797045, 115.780192, 117.666196, 32.854058, 38.737966)
+)
+
 locdf <- data.frame(locname = "KOS",
 		country = "Russia",
-		region = "Kuban")
+		region = "Kuban",
+		lat = corrds[corrds$locname == "KOS", 2],
+		lon = corrds[corrds$locname == "KOS", 3])
 
 SQL <- sqlAppendTable(conn, "location", locdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
-kos2016meteo <- read.csv('../meteo2016.csv')
+kos2016meteo <- read.csv('./meteo2016.csv')
 mdf <- data.frame(cbind(1:5, rep('KOS', 5), rep(2016, 5), 4:8, t(kos2016meteo[,-1])))
 colnames(mdf) <- c('id', 'location', 'year', 'month', 'tmean', 'pmean', 'pdays', 'tsum10', 'tsoil', 'hrel')
 SQL <- sqlAppendTable(conn, "meteo", mdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
-kos2017meteo <- read.csv('../meteo2017.csv')
+kos2017meteo <- read.csv('./meteo2017.csv')
 mdf <- data.frame(cbind(6:10, rep('KOS', 5), rep(2017, 5), 4:8, t(kos2017meteo[,-1])))
 colnames(mdf) <- c('id', 'location', 'year', 'month', 'tmean', 'pmean', 'pdays', 'tsum10', 'tsoil', 'hrel')
 SQL <- sqlAppendTable(conn, "meteo", mdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
-pd <- read.csv('../pheno_doug_2017.csv', header = 1, stringsAsFactors = FALSE)
+pd <- read.csv('../chickpea-doug/pheno_doug_2017.csv', header = 1, stringsAsFactors = FALSE)
 
 colnames(pd) <- c("X","Y","catnumber","ID","ancright","inseriesnum","origin","sowing","Number.sowing.seeds","Number.of.rows","seedlings10","seedlings75","flowering10","flowering75","maturityStart","maturityFull","Sowing...the.beginning.seedlings.days.","Beginning.seedlings...the.beginning.of.flowering..days.","Beginning.seedlings...full.of.flowering..days.","Beginning.of.flowering...full.of.flowering..days.","Beginning.of.flowering...the.beginning.of.ripening..days.","Beginning.seedlings...the.beginning.of.ripening..days.","Beginning.seedlings...full.maturation..days.","The.beginning.of.ripening...full.maturation..days.","flowerColour","bushShape","Ptht_1","Hlp_1","PPP_1","PDW_1","PDL_1","SPD_1","SCO","TSW","SYDP_1","PDH","NODULS","PodPed","ascDamage")
 
@@ -144,6 +152,11 @@ colnames(gdf) <- c('gname', 'ancleft', 'ancright')
 SQL <- sqlAppendTable(conn, "genotype", gdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
+vdf <- data.frame(cbind(gname, rep(0, length(gname)), rep('loc', length(gname)), rep(1900, length(gname)), gname))
+colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear', 'gtname')
+SQL <- sqlAppendTable(conn, "variety", vdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
 #odb.insert(ODB, "genotype", cbind(gname, rep('ICCV96029', length(gname)), pd[ii, 5]), execute = TRUE, dateFormat = "%m/%d/%Y")
 
 #pd[20,]$maturityFull <- "03/08/2017"
@@ -164,7 +177,7 @@ apply(pd[-c(which(pd$flowering75 == ""), which(is.na(pd$flowering75)), which(is.
 		format.Date(as.Date(r[15], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[16], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[38], "'KOS_2017'", sep = ',')
-	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, flowering75, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
 	cat(qu, '\n')
 #	odb.write(ODB, qu)
 	dbSendStatement(conn, qu)
@@ -178,7 +191,7 @@ apply(pd[which(pd$flowering75 == "погиб"),], 1, FUN=function(r) {
 		format.Date(as.Date(r[12], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[13], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		r[36], r[38], "'KOS_2017'", sep = ',')
-	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, PDH, PodPed, env) VALUES (", dat, ")")
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, PDH, PodPed, env) VALUES (", dat, ")")
 	cat(qu, '\n')
 #	odb.write(ODB, qu)
 	dbSendStatement(conn, qu)
@@ -194,13 +207,13 @@ apply(pd[c(which(pd$flowering75 == ""), which(is.na(pd$flowering75))),], 1, FUN=
 		format.Date(as.Date(r[15], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		format.Date(as.Date(r[16], format = "%m/%d/%Y"), format="'%Y-%m-%d'"),
 		r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[38], "'KOS_2017'", sep = ',')
-	qu <- paste0("INSERT INTO accession (genotype, inseriesnum, sowing, seedlings10, seedlings75, flowering10, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
+	qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, seedlings10, seedlings75, flowering10, maturityStart, maturityFull, flowerColor, bushShape, Ptht, Hlp, PPP, PDW, PDL, SPD, SCO, TSW, SYDP, PDH, PodPed, env) VALUES (", dat, ")")
 	cat(qu, '\n')
 #	odb.write(ODB, qu)
 	dbSendStatement(conn, qu)
 })
 
-kgl <- read.csv('../data-kruglic.csv', comment.char="#", header = TRUE)
+kgl <- read.csv('../chickpea-doug/data-kruglic.csv', comment.char="#", header = TRUE)
 
 #NL <- sum(nlevels(kgl$DD),
 #		nlevels(kgl$N),
@@ -274,8 +287,8 @@ kgl$RRR[kgl$RRR == "Осадков нет"] <- 0
 kgl$RRR[kgl$RRR == "Следы осадков"] <- 0.0000000000000001
 kgl$RRR <- as.numeric(kgl$RRR)
 
-kdf <- data.frame(cbind(1:nrow(kgl), rep('KOS', nrow(kgl)), kgl))
-colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[-1], fixed = TRUE)))
+kdf <- data.frame(cbind(1:nrow(kgl), rep('KOS', nrow(kgl)), kgl, daylength(corrds[corrds$locname == "KOS", 2], kgl[, 1])))
+colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[-1], fixed = TRUE)), "dl")
 SQL <- sqlAppendTable(conn, "rp5data", kdf, row.names = FALSE)
 dbSendStatement(conn, SQL)
 
@@ -839,4 +852,466 @@ apply(pd, 1, FUN=function(r) {
 #    qu <- paste0("delete from accession where variety = '", r[1], "'")
 #    dbSendStatement(conn, qu)
 #})
+
+
+pd <- read.csv('../chickpea-eric/collection_chickpea.csv', header = 1, stringsAsFactors = FALSE)
+
+ii <- !duplicated(pd[, 8])
+
+NN <- sum(ii)
+
+vdf <- data.frame(cbind(pd[ii, 8], pd[ii, 7], rep('Turkey', NN), rep(2000, NN), pd[ii, 15], pd[ii, 16]))
+colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear', 'colsite', 'colsitecode')
+apply(vdf, 1, FUN=function(r) {
+    tryCatch(
+		{
+    qu <- paste0("insert into variety (name, catnumber,  origin_country, colyear, colsite, colsitecode) values ('", r[1], "',", r[2], ",'", r[3], "',", r[4], ",'", r[5], "','", r[6], "')")
+    cat(qu, '\n')
+    dbSendStatement(conn, qu)
+},
+	    error=function(cond) { message(cond); return(NULL)},
+	    warning=function(cond) { message(cond); return(NULL) },
+	    finally={ message("Some other message at the end") })
+})
+
+
+ii <- !duplicated(pd[, 3])
+
+NN <- sum(ii)
+
+locdf <- data.frame(cbind(pd[ii, 3], pd[ii, 1], pd[ii, 3], corrds[2:5, 2], corrds[2:5, 3]))
+colnames(locdf) <- c('locname', 'country', 'region', 'lat', 'lon')
+SQL <- sqlAppendTable(conn, "location", locdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+
+ii <- !duplicated(pd[, 4])
+
+NN <- sum(ii)
+
+envdf <- data.frame(envname=c("Flor_16", "MB_16", "Ank_14", "Ank_15", "Urfa_14", "Urfa_15"),
+		location = c("Floreat", "Mt. Barker", "Ankara", "Ankara", "Urfa", "Urfa"),
+		year = c(2016, 2016, 2014, 2015, 2014, 2015))
+
+SQL <- sqlAppendTable(conn, "environment", envdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+#apply(pd[4582:5769,], 1, FUN=function(r) {
+apply(pd, 1, FUN=function(r) {
+    gt <- paste0("'", r[8], "'")
+    tmnt <- 0
+    if (tolower(r[5]) == 'drought') {
+	tmnt <- 1
+    } else if (tolower(r[5]) == 'ww') {
+	tmnt <- 2
+    } else if (tolower(r[5]) == 'tos 1') {
+	tmnt <- 3
+    } else if (tolower(r[5]) == 'tos 2') {
+	tmnt <- 4
+    } else if (tolower(r[5]) == 'tos 3') {
+	tmnt <- 5
+    }
+    dat <- gsub("NA", "NULL", paste(r[21],
+		format.Date(as.Date(r[29], format = "%d.%m.%Y"), format="'%Y-%m-%d'"),
+		format.Date(as.Date(r[31], format = "%d.%m.%Y"), format="'%Y-%m-%d'"),
+		tmnt,
+		paste0("'", r[22], "'"), paste0("'", r[4], "'"), sep = ','))
+    qu <- paste0("INSERT INTO accession (variety, inseriesnum, sowing, flowering10, treatment_id, spot, env) VALUES (", gt, ',', dat, ")")
+    cat(qu, '\n')
+    dbSendStatement(conn, qu)
+})
+
+#ankara-17130.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv
+
+kgl <- read.csv('../chickpea-eric/ankara-17130.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv', comment.char="#", header = TRUE, row.names = NULL, sep = ";")
+
+#NL <- sum(nlevels(kgl$DD),
+#		nlevels(kgl$N),
+#		nlevels(kgl$WW),
+#		nlevels(kgl$W1),
+#		nlevels(kgl$W2),
+#		nlevels(kgl$Cl),
+#		nlevels(kgl$Nh),
+#		nlevels(kgl$H),
+#		nlevels(kgl$Cm),
+#		nlevels(kgl$Ch),
+#		nlevels(kgl$E),
+#		nlevels(kgl$E.))
+#
+#SQL <- sqlAppendTable(conn, "rp5levels", rp5lev, row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#SQL <- sqlAppendTable(conn, "rp5levels_dd", data.frame(level = c(seq(1:nlevels(kgl$DD))), explanation = c(levels(kgl$DD))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_n", data.frame(level = c(seq(1:nlevels(kgl$N))), explanation = c(levels(kgl$N))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ww", data.frame(level = c(seq(1:nlevels(kgl$WW))), explanation = c(levels(kgl$WW))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_nh", data.frame(level = c(seq(1:nlevels(kgl$Nh))), explanation = c(levels(kgl$Nh))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_h", data.frame(level = c(seq(1:nlevels(kgl$H))), explanation = c(levels(kgl$H))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cm", data.frame(level = c(seq(1:nlevels(kgl$Cm))), explanation = c(levels(kgl$Cm))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ch", data.frame(level = c(seq(1:nlevels(kgl$Ch))), explanation = c(levels(kgl$Ch))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E.))), explanation = c(levels(kgl$E.))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
+
+#kgl$DD <- as.numeric(kgl$DD)
+kgl$N <- as.numeric(kgl$N)
+kgl$WW <- as.numeric(kgl$WW)
+kgl$W1 <- as.numeric(kgl$W1)
+kgl$W2 <- as.numeric(kgl$W2)
+kgl$Cl <- as.numeric(kgl$Cl)
+kgl$Nh <- as.numeric(kgl$Nh)
+kgl$H <- as.numeric(kgl$H)
+kgl$Cm <- as.numeric(kgl$Cm)
+kgl$Ch <- as.numeric(kgl$Ch)
+#kgl$E <- as.numeric(kgl$E)
+kgl$E. <- as.numeric(kgl$E.)
+
+#kgl[,1] <- as.character(kgl[,1])
+kgl[,1] <- paste("'",strptime(kgl[,1], format = "%d.%m.%Y%t%R"), "'", sep = "")
+
+kgl$sss <- as.character(kgl$sss)
+kgl$sss[kgl$sss == ""] <- 0
+kgl$sss[kgl$sss == "Менее 0.5"] <- 0
+kgl$sss <- as.numeric(kgl$sss)
+
+kgl[,1] <- gsub("'", "", kgl[,1])
+
+#kgl$RRR <- as.character(kgl$RRR)
+#kgl$RRR[kgl$RRR == ""] <- 0
+#kgl$RRR[kgl$RRR == "Осадков нет"] <- 0
+#kgl$RRR[kgl$RRR == "Следы осадков"] <- 0.0000000000000001
+#gl$RRR <- as.numeric(kgl$RRR)
+
+kdf <- data.frame(cbind((4091+1):(4091+nrow(kgl)), rep('Ankara', nrow(kgl)), kgl[-2], daylength(corrds[corrds$locname == "Ankara", 2], kgl[, 1])))
+colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[c(-1, -2)], fixed = TRUE)), "dl")
+kdf$ff3 <- as.numeric(kdf$ff3)
+kdf$u <- as.numeric(kdf$u)
+kdf$tx <- as.numeric(kdf$tx)
+kdf$td <- as.numeric(kdf$td)
+kdf$tg <- as.numeric(kdf$tg)
+kdf$tr <- as.numeric(kdf$tr)
+kdf[kdf$ch == 13,]$ch = 10
+kdf[kdf$ch == 26,]$ch = 2
+kdf[kdf$ch == 25,]$ch = 5
+kdf[kdf$ch == 27,]$ch = 7
+kdf[kdf$ch == 22,]$ch = 2
+kdf$ch = 2
+kdf[kdf$n == 35,]$n = 3
+kdf[kdf$n == 62,]$n = 6
+kdf$w2 = 2
+kdf$e1 = 1
+kdf$e = 1
+kdf$n = 1
+kdf$nh = 1
+kdf$dd = 1
+SQL <- sqlAppendTable(conn, "rp5data", kdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+#barker-94675.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv
+
+kgl <- read.csv('../chickpea-eric/barker-94675.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv', comment.char="#", header = TRUE, row.names = NULL, sep = ";")
+
+#NL <- sum(nlevels(kgl$DD),
+#		nlevels(kgl$N),
+#		nlevels(kgl$WW),
+#		nlevels(kgl$W1),
+#		nlevels(kgl$W2),
+#		nlevels(kgl$Cl),
+#		nlevels(kgl$Nh),
+#		nlevels(kgl$H),
+#		nlevels(kgl$Cm),
+#		nlevels(kgl$Ch),
+#		nlevels(kgl$E),
+#		nlevels(kgl$E.))
+#
+#SQL <- sqlAppendTable(conn, "rp5levels", rp5lev, row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#SQL <- sqlAppendTable(conn, "rp5levels_dd", data.frame(level = c(seq(1:nlevels(kgl$DD))), explanation = c(levels(kgl$DD))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_n", data.frame(level = c(seq(1:nlevels(kgl$N))), explanation = c(levels(kgl$N))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ww", data.frame(level = c(seq(1:nlevels(kgl$WW))), explanation = c(levels(kgl$WW))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_nh", data.frame(level = c(seq(1:nlevels(kgl$Nh))), explanation = c(levels(kgl$Nh))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_h", data.frame(level = c(seq(1:nlevels(kgl$H))), explanation = c(levels(kgl$H))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cm", data.frame(level = c(seq(1:nlevels(kgl$Cm))), explanation = c(levels(kgl$Cm))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ch", data.frame(level = c(seq(1:nlevels(kgl$Ch))), explanation = c(levels(kgl$Ch))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E.))), explanation = c(levels(kgl$E.))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
+
+#kgl$DD <- as.numeric(kgl$DD)
+kgl$N <- as.numeric(kgl$N)
+kgl$WW <- as.numeric(kgl$WW)
+kgl$W1 <- as.numeric(kgl$W1)
+kgl$W2 <- as.numeric(kgl$W2)
+kgl$Cl <- as.numeric(kgl$Cl)
+kgl$Nh <- as.numeric(kgl$Nh)
+kgl$H <- as.numeric(kgl$H)
+kgl$Cm <- as.numeric(kgl$Cm)
+kgl$Ch <- as.numeric(kgl$Ch)
+#kgl$E <- as.numeric(kgl$E)
+kgl$E. <- as.numeric(kgl$E.)
+
+#kgl[,1] <- as.character(kgl[,1])
+kgl[,1] <- paste("'",strptime(kgl[,1], format = "%d.%m.%Y%t%R"), "'", sep = "")
+
+kgl$sss <- as.character(kgl$sss)
+kgl$sss[kgl$sss == ""] <- 0
+kgl$sss[kgl$sss == "Менее 0.5"] <- 0
+kgl$sss <- as.numeric(kgl$sss)
+
+kgl[,1] <- gsub("'", "", kgl[,1])
+
+#kgl$RRR <- as.character(kgl$RRR)
+#kgl$RRR[kgl$RRR == ""] <- 0
+#kgl$RRR[kgl$RRR == "Осадков нет"] <- 0
+#kgl$RRR[kgl$RRR == "Следы осадков"] <- 0.0000000000000001
+#gl$RRR <- as.numeric(kgl$RRR)
+
+kdf <- data.frame(cbind((29555+1):(29555+nrow(kgl)), rep('Mt. Barker', nrow(kgl)), kgl[-2], daylength(corrds[corrds$locname == "Mt. Barker", 2], kgl[, 1])))
+colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[c(-1, -2)], fixed = TRUE)), "dl")
+kdf$ff3 <- as.numeric(kdf$ff3)
+kdf$u <- as.numeric(kdf$u)
+kdf$tx <- as.numeric(kdf$tx)
+kdf$td <- as.numeric(kdf$td)
+kdf$tg <- as.numeric(kdf$tg)
+kdf$tr <- as.numeric(kdf$tr)
+kdf$ch = 2
+kdf$w2 = 2
+kdf$e1 = 1
+kdf$e = 1
+kdf$n = 1
+kdf$nh = 1
+kdf$dd = 1
+SQL <- sqlAppendTable(conn, "rp5data", kdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+rp5 <- dbReadTable(conn, 'rp5data')
+dim(rp5)
+
+#urfa-17270.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv
+
+kgl <- read.csv('../chickpea-eric/urfa-17270.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv', comment.char="#", header = TRUE, row.names = NULL, sep = ";")
+
+#NL <- sum(nlevels(kgl$DD),
+#		nlevels(kgl$N),
+#		nlevels(kgl$WW),
+#		nlevels(kgl$W1),
+#		nlevels(kgl$W2),
+#		nlevels(kgl$Cl),
+#		nlevels(kgl$Nh),
+#		nlevels(kgl$H),
+#		nlevels(kgl$Cm),
+#		nlevels(kgl$Ch),
+#		nlevels(kgl$E),
+#		nlevels(kgl$E.))
+#
+#SQL <- sqlAppendTable(conn, "rp5levels", rp5lev, row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#SQL <- sqlAppendTable(conn, "rp5levels_dd", data.frame(level = c(seq(1:nlevels(kgl$DD))), explanation = c(levels(kgl$DD))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_n", data.frame(level = c(seq(1:nlevels(kgl$N))), explanation = c(levels(kgl$N))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ww", data.frame(level = c(seq(1:nlevels(kgl$WW))), explanation = c(levels(kgl$WW))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_nh", data.frame(level = c(seq(1:nlevels(kgl$Nh))), explanation = c(levels(kgl$Nh))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_h", data.frame(level = c(seq(1:nlevels(kgl$H))), explanation = c(levels(kgl$H))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cm", data.frame(level = c(seq(1:nlevels(kgl$Cm))), explanation = c(levels(kgl$Cm))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ch", data.frame(level = c(seq(1:nlevels(kgl$Ch))), explanation = c(levels(kgl$Ch))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E.))), explanation = c(levels(kgl$E.))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
+
+#kgl$DD <- as.numeric(kgl$DD)
+kgl$N <- as.numeric(kgl$N)
+kgl$WW <- as.numeric(kgl$WW)
+kgl$W1 <- as.numeric(kgl$W1)
+kgl$W2 <- as.numeric(kgl$W2)
+kgl$Cl <- as.numeric(kgl$Cl)
+kgl$Nh <- as.numeric(kgl$Nh)
+kgl$H <- as.numeric(kgl$H)
+kgl$Cm <- as.numeric(kgl$Cm)
+kgl$Ch <- as.numeric(kgl$Ch)
+#kgl$E <- as.numeric(kgl$E)
+kgl$E. <- as.numeric(kgl$E.)
+
+#kgl[,1] <- as.character(kgl[,1])
+kgl[,1] <- paste("'",strptime(kgl[,1], format = "%d.%m.%Y%t%R"), "'", sep = "")
+
+kgl$sss <- as.character(kgl$sss)
+kgl$sss[kgl$sss == ""] <- 0
+kgl$sss[kgl$sss == "Менее 0.5"] <- 0
+kgl$sss <- as.numeric(kgl$sss)
+
+kgl[,1] <- gsub("'", "", kgl[,1])
+
+#kgl$RRR <- as.character(kgl$RRR)
+#kgl$RRR[kgl$RRR == ""] <- 0
+#kgl$RRR[kgl$RRR == "Осадков нет"] <- 0
+#kgl$RRR[kgl$RRR == "Следы осадков"] <- 0.0000000000000001
+#gl$RRR <- as.numeric(kgl$RRR)
+
+kdf <- data.frame(cbind((38543+1):(38543+nrow(kgl)), rep('Urfa', nrow(kgl)), kgl[-2], daylength(corrds[corrds$locname == "Urfa", 2], kgl[, 1])))
+colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[c(-1, -2)], fixed = TRUE)), "dl")
+kdf$ff3 <- as.numeric(kdf$ff3)
+kdf$u <- as.numeric(kdf$u)
+kdf$tx <- as.numeric(kdf$tx)
+kdf$td <- as.numeric(kdf$td)
+kdf$tg <- as.numeric(kdf$tg)
+kdf$tr <- as.numeric(kdf$tr)
+kdf$ch = 2
+kdf$w2 = 2
+kdf$e1 = 1
+kdf$e = 1
+kdf$n = 1
+kdf$nh = 1
+kdf$dd = 1
+SQL <- sqlAppendTable(conn, "rp5data", kdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+rp5 <- dbReadTable(conn, 'rp5data')
+dim(rp5)
+
+#perth-94608.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv
+
+kgl <- read.csv('../chickpea-eric/perth-94608.01.01.2014.31.12.2016.1.0.0.en.ansi.00000000.csv', comment.char="#", header = TRUE, row.names = NULL, sep = ";")
+
+#NL <- sum(nlevels(kgl$DD),
+#		nlevels(kgl$N),
+#		nlevels(kgl$WW),
+#		nlevels(kgl$W1),
+#		nlevels(kgl$W2),
+#		nlevels(kgl$Cl),
+#		nlevels(kgl$Nh),
+#		nlevels(kgl$H),
+#		nlevels(kgl$Cm),
+#		nlevels(kgl$Ch),
+#		nlevels(kgl$E),
+#		nlevels(kgl$E.))
+#
+#SQL <- sqlAppendTable(conn, "rp5levels", rp5lev, row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#SQL <- sqlAppendTable(conn, "rp5levels_dd", data.frame(level = c(seq(1:nlevels(kgl$DD))), explanation = c(levels(kgl$DD))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_n", data.frame(level = c(seq(1:nlevels(kgl$N))), explanation = c(levels(kgl$N))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ww", data.frame(level = c(seq(1:nlevels(kgl$WW))), explanation = c(levels(kgl$WW))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w1", data.frame(level = c(seq(1:nlevels(kgl$W1))), explanation = c(levels(kgl$W1))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_w2", data.frame(level = c(seq(1:nlevels(kgl$W2))), explanation = c(levels(kgl$W2))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cl", data.frame(level = c(seq(1:nlevels(kgl$Cl))), explanation = c(levels(kgl$Cl))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_nh", data.frame(level = c(seq(1:nlevels(kgl$Nh))), explanation = c(levels(kgl$Nh))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_h", data.frame(level = c(seq(1:nlevels(kgl$H))), explanation = c(levels(kgl$H))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_cm", data.frame(level = c(seq(1:nlevels(kgl$Cm))), explanation = c(levels(kgl$Cm))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_ch", data.frame(level = c(seq(1:nlevels(kgl$Ch))), explanation = c(levels(kgl$Ch))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e", data.frame(level = c(seq(1:nlevels(kgl$E))), explanation = c(levels(kgl$E))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+#SQL <- sqlAppendTable(conn, "rp5levels_e1", data.frame(level = c(seq(1:nlevels(kgl$E.))), explanation = c(levels(kgl$E.))), row.names = FALSE)
+#dbSendStatement(conn, SQL)
+
+#odb.insert(ODB, "rp5levels", rp5lev, execute = TRUE, dateFormat = "%m/%d/%Y")
+
+#kgl$DD <- as.numeric(kgl$DD)
+kgl$N <- as.numeric(kgl$N)
+kgl$WW <- as.numeric(kgl$WW)
+kgl$W1 <- as.numeric(kgl$W1)
+kgl$W2 <- as.numeric(kgl$W2)
+kgl$Cl <- as.numeric(kgl$Cl)
+kgl$Nh <- as.numeric(kgl$Nh)
+kgl$H <- as.numeric(kgl$H)
+kgl$Cm <- as.numeric(kgl$Cm)
+kgl$Ch <- as.numeric(kgl$Ch)
+#kgl$E <- as.numeric(kgl$E)
+kgl$E. <- as.numeric(kgl$E.)
+
+#kgl[,1] <- as.character(kgl[,1])
+kgl[,1] <- paste("'",strptime(kgl[,1], format = "%d.%m.%Y%t%R"), "'", sep = "")
+
+kgl$sss <- as.character(kgl$sss)
+kgl$sss[kgl$sss == ""] <- 0
+kgl$sss[kgl$sss == "Менее 0.5"] <- 0
+kgl$sss <- as.numeric(kgl$sss)
+
+kgl[,1] <- gsub("'", "", kgl[,1])
+
+#kgl$RRR <- as.character(kgl$RRR)
+#kgl$RRR[kgl$RRR == ""] <- 0
+#kgl$RRR[kgl$RRR == "Осадков нет"] <- 0
+#kgl$RRR[kgl$RRR == "Следы осадков"] <- 0.0000000000000001
+#gl$RRR <- as.numeric(kgl$RRR)
+
+kdf <- data.frame(cbind((56290+1):(56290+nrow(kgl)), rep('Floreat', nrow(kgl)), kgl[-2], daylength(corrds[corrds$locname == "Floreat", 2], kgl[, 1])))
+colnames(kdf) <- c("id", "location", "tsp", tolower(gsub(".", "1", colnames(kgl)[c(-1, -2)], fixed = TRUE)), "dl")
+kdf$ff3 <- as.numeric(kdf$ff3)
+kdf$u <- as.numeric(kdf$u)
+kdf$tx <- as.numeric(kdf$tx)
+kdf$td <- as.numeric(kdf$td)
+kdf$tg <- as.numeric(kdf$tg)
+kdf$tr <- as.numeric(kdf$tr)
+kdf$ch = 2
+kdf$w2 = 2
+kdf$e1 = 1
+kdf$e = 1
+kdf$n = 1
+kdf$nh = 1
+kdf$dd = 1
+SQL <- sqlAppendTable(conn, "rp5data", kdf, row.names = FALSE)
+dbSendStatement(conn, SQL)
+
+
+rp5 <- dbReadTable(conn, 'rp5data')
+dim(rp5)
+
 
