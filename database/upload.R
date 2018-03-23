@@ -860,14 +860,14 @@ ii <- !duplicated(pd[, 8])
 
 NN <- sum(ii)
 
-vdf <- data.frame(cbind(pd[ii, 8], pd[ii, 7], rep('Turkey', NN), rep(2000, NN), pd[ii, 15], pd[ii, 16]))
-colnames(vdf) <- c('name', 'catnumber',  'origin_country', 'colyear', 'colsite', 'colsitecode')
-apply(vdf, 1, FUN=function(r) {
+vdf <- data.frame(cbind(pd[ii, 8], pd[ii, 7], rep('Turkey', NN), pd[ii, 14], rep(2010, NN), pd[ii, 15], pd[ii, 16]))
+colnames(vdf) <- c('name', 'catnumber',  'origin_country',  'origin_region', 'colyear', 'colsite', 'colsitecode')
+qq <- apply(vdf, 1, FUN=function(r) {
     tryCatch(
 		{
-    qu <- paste0("insert into variety (name, catnumber,  origin_country, colyear, colsite, colsitecode) values ('", r[1], "',", r[2], ",'", r[3], "',", r[4], ",'", r[5], "','", r[6], "')")
-    cat(qu, '\n')
-    dbSendStatement(conn, qu)
+    qu <- paste0("insert into variety (name, catnumber, origin_country, origin_region, colyear, colsite, colsitecode) values ('", r[1], "',", r[2], ",'", r[3], "','", r[4], "',", r[5], ",'", r[6], "','", r[7], "') ON CONFLICT (name) DO UPDATE SET catnumber = excluded.catnumber, origin_country  = excluded.origin_country, origin_region  = excluded.origin_region, colyear = excluded.colyear, colsite = excluded.colsite, colsitecode = excluded.colsitecode")
+#    cat(qu, '\n')
+    res <- dbSendStatement(conn, qu)
 },
 	    error=function(cond) { message(cond); return(NULL)},
 	    warning=function(cond) { message(cond); return(NULL) },

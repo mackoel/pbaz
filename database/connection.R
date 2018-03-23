@@ -3,6 +3,7 @@ drv_generic <- dbDriver("PostgreSQL")
 conn <- dbConnect(drv=drv_generic, "localhost", port = 5432, user = "pbaz", password = "pbaz", dbname = "pbaz")
 
 dbSendStatement(conn, "DROP VIEW clim_pheno")
+dbSendStatement(conn, "DROP VIEW clim_pheno_full")
 dbSendStatement(conn, "DROP VIEW clim_pheno_of")
 dbSendStatement(conn, "DROP VIEW clim_pheno_o_f_1")
 dbSendStatement(conn, "DROP VIEW clim_pheno_o_s_f_m")
