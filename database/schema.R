@@ -1091,6 +1091,34 @@ SQL <- c(
 dbSendStatement(conn, SQL)
 
 SQL <- c(
+	"CREATE VIEW rp5_sowing_to_flowering10
+	 as
+	 SELECT num, variety, inseriesnum, treatment_id, env,
+		AVG(T) as T_mean_sowingToFlowering10,
+		SUM(case when T > 10 then T end) as T_sum10_sowingToFlowering10,
+		SUM(case when T > 15 then T end) as T_sum15_sowingToFlowering10,
+		SUM(T) as T_sum_sowingToFlowering10,
+		MAX(T) as T_max_sowingToFlowering10,
+		MIN(T) as T_min_sowingToFlowering10,
+		AVG(U) as U_mean_sowingToFlowering10,
+		AVG(RRR) as RRR_mean_sowingToFlowering10,
+		SUM(RRR) as RRR_sum_sowingToFlowering10,
+		SUM(Dl) as Dl_sum_sowingToFlowering10,
+		MAX(Dl) as Dl_max_sowingToFlowering10,
+		MIN(Dl) as Dl_min_sowingToFlowering10,
+		AVG(Dl) as Dl_mean_sowingToFlowering10
+		FROM accession, rp5data
+		where
+		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM flowering10) AND
+		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
+		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
+		GROUP BY num"
+)
+
+#odb.write(ODB, SQL)
+dbSendStatement(conn, SQL)
+
+SQL <- c(
 	"CREATE VIEW rp5_seedlings75_to_flowering10
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
@@ -1148,16 +1176,16 @@ SQL <- c(
 	"CREATE VIEW rp5_sowing
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
-		T as T_sowing,
-		U as U_sowing,
-		RRR as RRR_sowing,
-		Dl as Dl_sowing
+		AVG(T) as T_sowing,
+		AVG(U) as U_sowing,
+		AVG(RRR) as RRR_sowing,
+		AVG(Dl) as Dl_sowing
 		FROM accession, rp5data
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM sowing) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1235,16 +1263,16 @@ SQL <- c(
 	"CREATE VIEW rp5_seedlings10
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
-		T as T_seedlings10,
-		U as U_seedlings10,
-		RRR as RRR_seedlings10,
-		Dl as Dl_seedlings10
+		AVG(T) as T_seedlings10,
+		AVG(U) as U_seedlings10,
+		AVG(RRR) as RRR_seedlings10,
+		AVG(Dl) as Dl_seedlings10
 		FROM accession, rp5data
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1322,16 +1350,16 @@ SQL <- c(
 	"CREATE VIEW rp5_seedlings75
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
-		T as T_seedlings75,
-		U as U_seedlings75,
-		RRR as RRR_seedlings75,
-		Dl as Dl_seedlings75
+		AVG(T) as T_seedlings75,
+		AVG(U) as U_seedlings75,
+		AVG(RRR) as RRR_seedlings75,
+		AVG(Dl) as Dl_seedlings75
 		FROM accession, rp5data
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1408,16 +1436,16 @@ SQL <- c(
 	"CREATE VIEW rp5_flowering10
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
-		T as T_flowering10,
-		U as U_flowering10,
-		RRR as RRR_flowering10,
-		Dl as Dl_flowering10
+		AVG(T) as T_flowering10,
+		AVG(U) as U_flowering10,
+		AVG(RRR) as RRR_flowering10,
+		AVG(Dl) as Dl_flowering10
 		FROM accession, rp5data
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1494,16 +1522,16 @@ SQL <- c(
 	"CREATE VIEW rp5_maturityFull
 	 as
 	 SELECT num, variety, inseriesnum, treatment_id, env,
-		T as T_maturityFull,
-		U as U_maturityFull,
-		RRR as RRR_maturityFull,
-		Dl as Dl_maturityFull
+		AVG(T) as T_maturityFull,
+		AVG(U) as U_maturityFull,
+		AVG(RRR) as RRR_maturityFull,
+		AVG(Dl) as Dl_maturityFull
 		FROM accession, rp5data
 		where
 		EXTRACT(DOY FROM tsp) = EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1583,6 +1611,7 @@ SQL <- c(
 	 SELECT
 		phase_transition_time.num as num,
 		phase_transition_time.variety as variety,
+		(SELECT origin_country FROM variety WHERE variety.name = phase_transition_time.variety) as origin,
 		phase_transition_time.inseriesnum as inseriesnum,
 		phase_transition_time.treatment_id as treatment_id,
 		phase_transition_time.env as env,
@@ -1616,6 +1645,19 @@ SQL <- c(
 		Dl_max_sowingToSeedlings75,
 		Dl_min_sowingToSeedlings75,
 		Dl_mean_sowingToSeedlings75,
+		T_mean_sowingToFlowering10,
+		T_sum10_sowingToFlowering10,
+		T_sum15_sowingToFlowering10,
+		T_sum_sowingToFlowering10,
+		T_max_sowingToFlowering10,
+		T_min_sowingToFlowering10,
+		U_mean_sowingToFlowering10,
+		RRR_mean_sowingToFlowering10,
+		RRR_sum_sowingToFlowering10,
+		Dl_sum_sowingToFlowering10,
+		Dl_max_sowingToFlowering10,
+		Dl_min_sowingToFlowering10,
+		Dl_mean_sowingToFlowering10,
 		T_mean_seedlings75ToFlowering10,
 		T_sum10_seedlings75ToFlowering10,
 		T_sum15_seedlings75ToFlowering10,
@@ -1797,128 +1839,302 @@ SQL <- c(
 		Dl_max_maturityFull_10x,
 		Dl_min_maturityFull_10x,
 		Dl_mean_maturityFull_10x
-	FROM phase_transition_time,
-		rp5_sowing_to_seedlings10,
-		rp5_sowing_to_seedlings75,
-		rp5_seedlings75_to_flowering10,
-		rp5_flowering75_to_maturityFull,
-		rp5_sowing,
-		rp5_sowing_5x5,
-		rp5_sowing_x10,
-		rp5_sowing_10x,
-		rp5_seedlings10,
-		rp5_seedlings10_5x5,
-		rp5_seedlings10_x10,
-		rp5_seedlings10_10x,
-		rp5_seedlings75,
-		rp5_seedlings75_5x5,
-		rp5_seedlings75_x10,
-		rp5_seedlings75_10x,
-		rp5_flowering10,
-		rp5_flowering10_5x5,
-		rp5_flowering10_x10,
-		rp5_flowering10_10x,
-		rp5_maturityFull,
-		rp5_maturityFull_5x5,
-		rp5_maturityFull_x10,
-		rp5_maturityFull_10x
-	WHERE
-		phase_transition_time.variety = rp5_sowing_to_seedlings10.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing_to_seedlings10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing_to_seedlings10.treatment_id AND
-		phase_transition_time.env = rp5_sowing_to_seedlings10.env AND
-		phase_transition_time.variety = rp5_sowing_to_seedlings75.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing_to_seedlings75.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing_to_seedlings75.treatment_id AND
-		phase_transition_time.env = rp5_sowing_to_seedlings75.env AND
-		phase_transition_time.variety = rp5_seedlings75_to_flowering10.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings75_to_flowering10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings75_to_flowering10.treatment_id AND
-		phase_transition_time.env = rp5_seedlings75_to_flowering10.env AND
-		phase_transition_time.variety = rp5_flowering75_to_maturityFull.variety AND
-		phase_transition_time.inseriesnum = rp5_flowering75_to_maturityFull.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_flowering75_to_maturityFull.treatment_id AND
-		phase_transition_time.env = rp5_flowering75_to_maturityFull.env AND
-		phase_transition_time.variety = rp5_sowing.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing.treatment_id AND
-		phase_transition_time.env = rp5_sowing.env AND
-		phase_transition_time.variety = rp5_sowing_5x5.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing_5x5.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing_5x5.treatment_id AND
-		phase_transition_time.env = rp5_sowing_5x5.env AND
-		phase_transition_time.variety = rp5_sowing_x10.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing_x10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing_x10.treatment_id AND
-		phase_transition_time.env = rp5_sowing_x10.env AND
-		phase_transition_time.variety = rp5_sowing_10x.variety AND
-		phase_transition_time.inseriesnum = rp5_sowing_10x.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_sowing_10x.treatment_id AND
-		phase_transition_time.env = rp5_sowing_10x.env AND
-		phase_transition_time.variety = rp5_seedlings10.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings10.treatment_id AND
-		phase_transition_time.env = rp5_seedlings10.env AND
-		phase_transition_time.variety = rp5_seedlings10_5x5.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings10_5x5.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings10_5x5.treatment_id AND
-		phase_transition_time.env = rp5_seedlings10_5x5.env AND
-		phase_transition_time.variety = rp5_seedlings10_x10.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings10_x10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings10_x10.treatment_id AND
-		phase_transition_time.env = rp5_seedlings10_x10.env AND
-		phase_transition_time.variety = rp5_seedlings10_10x.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings10_10x.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings10_10x.treatment_id AND
-		phase_transition_time.env = rp5_seedlings10_10x.env AND
-		phase_transition_time.variety = rp5_seedlings75.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings75.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings75.treatment_id AND
-		phase_transition_time.env = rp5_seedlings75.env AND
-		phase_transition_time.variety = rp5_seedlings75_5x5.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings75_5x5.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings75_5x5.treatment_id AND
-		phase_transition_time.env = rp5_seedlings75_5x5.env AND
-		phase_transition_time.variety = rp5_seedlings75_x10.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings75_x10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings75_x10.treatment_id AND
-		phase_transition_time.env = rp5_seedlings75_x10.env AND
-		phase_transition_time.variety = rp5_seedlings75_10x.variety AND
-		phase_transition_time.inseriesnum = rp5_seedlings75_10x.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_seedlings75_10x.treatment_id AND
-		phase_transition_time.env = rp5_seedlings75_10x.env AND
-		phase_transition_time.variety = rp5_flowering10.variety AND
-		phase_transition_time.inseriesnum = rp5_flowering10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_flowering10.treatment_id AND
-		phase_transition_time.env = rp5_flowering10.env AND
-		phase_transition_time.variety = rp5_flowering10_5x5.variety AND
-		phase_transition_time.inseriesnum = rp5_flowering10_5x5.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_flowering10_5x5.treatment_id AND
-		phase_transition_time.env = rp5_flowering10_5x5.env AND
-		phase_transition_time.variety = rp5_flowering10_x10.variety AND
-		phase_transition_time.inseriesnum = rp5_flowering10_x10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_flowering10_x10.treatment_id AND
-		phase_transition_time.env = rp5_flowering10_x10.env AND
-		phase_transition_time.variety = rp5_flowering10_10x.variety AND
-		phase_transition_time.inseriesnum = rp5_flowering10_10x.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_flowering10_10x.treatment_id AND
-		phase_transition_time.env = rp5_flowering10_10x.env AND
-		phase_transition_time.variety = rp5_maturityFull.variety AND
-		phase_transition_time.inseriesnum = rp5_maturityFull.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_maturityFull.treatment_id AND
-		phase_transition_time.env = rp5_maturityFull.env AND
-		phase_transition_time.variety = rp5_maturityFull_5x5.variety AND
-		phase_transition_time.inseriesnum = rp5_maturityFull_5x5.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_maturityFull_5x5.treatment_id AND
-		phase_transition_time.env = rp5_maturityFull_5x5.env AND
-		phase_transition_time.variety = rp5_maturityFull_x10.variety AND
-		phase_transition_time.inseriesnum = rp5_maturityFull_x10.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_maturityFull_x10.treatment_id AND
-		phase_transition_time.env = rp5_maturityFull_x10.env AND
-		phase_transition_time.variety = rp5_maturityFull_10x.variety AND
-		phase_transition_time.inseriesnum = rp5_maturityFull_10x.inseriesnum AND
-		phase_transition_time.treatment_id = rp5_maturityFull_10x.treatment_id AND
-		phase_transition_time.env = rp5_maturityFull_x10.env"
+	FROM
+		phase_transition_time
+	INNER JOIN rp5_sowing_to_seedlings10 ON phase_transition_time.num = rp5_sowing_to_seedlings10.num
+	INNER JOIN rp5_sowing_to_seedlings75 ON phase_transition_time.num = rp5_sowing_to_seedlings75.num
+	INNER JOIN rp5_sowing_to_flowering10 ON phase_transition_time.num = rp5_sowing_to_flowering10.num
+	INNER JOIN rp5_seedlings75_to_flowering10 ON phase_transition_time.num = rp5_seedlings75_to_flowering10.num
+	INNER JOIN rp5_flowering75_to_maturityFull ON phase_transition_time.num = rp5_flowering75_to_maturityFull.num
+	INNER JOIN rp5_sowing ON phase_transition_time.num = rp5_sowing.num
+	INNER JOIN rp5_sowing_5x5 ON phase_transition_time.num = rp5_sowing_5x5.num
+	INNER JOIN rp5_sowing_x10 ON phase_transition_time.num = rp5_sowing_x10.num
+	INNER JOIN rp5_sowing_10x ON phase_transition_time.num = rp5_sowing_10x.num
+	INNER JOIN rp5_seedlings10 ON phase_transition_time.num = rp5_seedlings10.num
+	INNER JOIN rp5_seedlings10_5x5 ON phase_transition_time.num = rp5_seedlings10_5x5.num
+	INNER JOIN rp5_seedlings10_x10 ON phase_transition_time.num = rp5_seedlings10_x10.num
+	INNER JOIN rp5_seedlings10_10x ON phase_transition_time.num = rp5_seedlings10_10x.num
+	INNER JOIN rp5_seedlings75 ON phase_transition_time.num = rp5_seedlings75.num
+	INNER JOIN rp5_seedlings75_5x5 ON phase_transition_time.num = rp5_seedlings75_5x5.num
+	INNER JOIN rp5_seedlings75_x10 ON phase_transition_time.num = rp5_seedlings75_x10.num
+	INNER JOIN rp5_seedlings75_10x ON phase_transition_time.num = rp5_seedlings75_10x.num
+	INNER JOIN rp5_flowering10 ON phase_transition_time.num = rp5_flowering10.num
+	INNER JOIN rp5_flowering10_5x5 ON phase_transition_time.num = rp5_flowering10_5x5.num
+	INNER JOIN rp5_flowering10_x10 ON phase_transition_time.num = rp5_flowering10_x10.num
+	INNER JOIN rp5_flowering10_10x ON phase_transition_time.num = rp5_flowering10_10x.num
+	INNER JOIN rp5_maturityFull ON phase_transition_time.num = rp5_maturityFull.num
+	INNER JOIN rp5_maturityFull_5x5 ON phase_transition_time.num = rp5_maturityFull_5x5.num
+	INNER JOIN rp5_maturityFull_x10 ON phase_transition_time.num = rp5_maturityFull_x10.num
+	INNER JOIN rp5_maturityFull_10x ON phase_transition_time.num = rp5_maturityFull_10x.num
+	"
 )
 
 dbSendStatement(conn, SQL)
+
+
+SQL <- c(
+	"CREATE VIEW clim_pheno_full
+	 as
+	 SELECT
+		phase_transition_time.num as num,
+		phase_transition_time.variety as variety,
+		(SELECT origin_country FROM variety WHERE variety.name = phase_transition_time.variety) as origin,
+		phase_transition_time.inseriesnum as inseriesnum,
+		phase_transition_time.treatment_id as treatment_id,
+		phase_transition_time.env as env,
+		sowingToSeedlings10,
+		sowingToSeedlings75,
+		seedlings75ToFlowering10,
+		flowering75ToMaturityFull,
+		T_mean_sowingToSeedlings10,
+		T_sum10_sowingToSeedlings10,
+		T_sum15_sowingToSeedlings10,
+		T_sum_sowingToSeedlings10,
+		T_max_sowingToSeedlings10,
+		T_min_sowingToSeedlings10,
+		U_mean_sowingToSeedlings10,
+		RRR_mean_sowingToSeedlings10,
+		RRR_sum_sowingToSeedlings10,
+		Dl_sum_sowingToSeedlings10,
+		Dl_max_sowingToSeedlings10,
+		Dl_min_sowingToSeedlings10,
+		Dl_mean_sowingToSeedlings10,
+		T_mean_sowingToSeedlings75,
+		T_sum10_sowingToSeedlings75,
+		T_sum15_sowingToSeedlings75,
+		T_sum_sowingToSeedlings75,
+		T_max_sowingToSeedlings75,
+		T_min_sowingToSeedlings75,
+		U_mean_sowingToSeedlings75,
+		RRR_mean_sowingToSeedlings75,
+		RRR_sum_sowingToSeedlings75,
+		Dl_sum_sowingToSeedlings75,
+		Dl_max_sowingToSeedlings75,
+		Dl_min_sowingToSeedlings75,
+		Dl_mean_sowingToSeedlings75,
+		T_mean_sowingToFlowering10,
+		T_sum10_sowingToFlowering10,
+		T_sum15_sowingToFlowering10,
+		T_sum_sowingToFlowering10,
+		T_max_sowingToFlowering10,
+		T_min_sowingToFlowering10,
+		U_mean_sowingToFlowering10,
+		RRR_mean_sowingToFlowering10,
+		RRR_sum_sowingToFlowering10,
+		Dl_sum_sowingToFlowering10,
+		Dl_max_sowingToFlowering10,
+		Dl_min_sowingToFlowering10,
+		Dl_mean_sowingToFlowering10,
+		T_mean_seedlings75ToFlowering10,
+		T_sum10_seedlings75ToFlowering10,
+		T_sum15_seedlings75ToFlowering10,
+		T_sum_seedlings75ToFlowering10,
+		T_max_seedlings75ToFlowering10,
+		T_min_seedlings75ToFlowering10,
+		U_mean_seedlings75ToFlowering10,
+		RRR_mean_seedlings75ToFlowering10,
+		RRR_sum_seedlings75ToFlowering10,
+		Dl_sum_seedlings75ToFlowering10,
+		Dl_max_seedlings75ToFlowering10,
+		Dl_min_seedlings75ToFlowering10,
+		Dl_mean_seedlings75ToFlowering10,
+		T_mean_flowering75ToMaturityFull,
+		T_sum10_flowering75ToMaturityFull,
+		T_sum15_flowering75ToMaturityFull,
+		T_sum_flowering75ToMaturityFull,
+		T_max_flowering75ToMaturityFull,
+		T_min_flowering75ToMaturityFull,
+		U_mean_flowering75ToMaturityFull,
+		RRR_mean_flowering75ToMaturityFull,
+		RRR_sum_flowering75ToMaturityFull,
+		Dl_sum_flowering75ToMaturityFull,
+		Dl_max_flowering75ToMaturityFull,
+		Dl_min_flowering75ToMaturityFull,
+		Dl_mean_flowering75ToMaturityFull,
+		T_sowing,
+		U_sowing,
+		RRR_sowing,
+		Dl_sowing,
+		T_mean_sowing_5x5,
+		T_max_sowing_5x5,
+		T_min_sowing_5x5,
+		U_mean_sowing_5x5,
+		RRR_mean_sowing_5x5,
+		Dl_sum_sowing_5x5,
+		Dl_max_sowing_5x5,
+		Dl_min_sowing_5x5,
+		Dl_mean_sowing_5x5,
+		T_mean_sowing_x10,
+		T_max_sowing_x10,
+		T_min_sowing_x10,
+		U_mean_sowing_x10,
+		RRR_mean_sowing_x10,
+		Dl_sum_sowing_x10,
+		Dl_max_sowing_x10,
+		Dl_min_sowing_x10,
+		Dl_mean_sowing_x10,
+		T_mean_sowing_10x,
+		T_max_sowing_10x,
+		T_min_sowing_10x,
+		U_mean_sowing_10x,
+		RRR_mean_sowing_10x,
+		Dl_sum_sowing_10x,
+		Dl_max_sowing_10x,
+		Dl_min_sowing_10x,
+		Dl_mean_sowing_10x,
+		T_seedlings10,
+		U_seedlings10,
+		RRR_seedlings10,
+		Dl_seedlings10,
+		T_mean_seedlings10_5x5,
+		T_max_seedlings10_5x5,
+		T_min_seedlings10_5x5,
+		U_mean_seedlings10_5x5,
+		RRR_mean_seedlings10_5x5,
+		Dl_sum_seedlings10_5x5,
+		Dl_max_seedlings10_5x5,
+		Dl_min_seedlings10_5x5,
+		Dl_mean_seedlings10_5x5,
+		T_mean_seedlings10_x10,
+		T_max_seedlings10_x10,
+		T_min_seedlings10_x10,
+		U_mean_seedlings10_x10,
+		RRR_mean_seedlings10_x10,
+		Dl_sum_seedlings10_x10,
+		Dl_max_seedlings10_x10,
+		Dl_min_seedlings10_x10,
+		Dl_mean_seedlings10_x10,
+		T_mean_seedlings10_10x,
+		T_max_seedlings10_10x,
+		T_min_seedlings10_10x,
+		U_mean_seedlings10_10x,
+		RRR_mean_seedlings10_10x,
+		Dl_sum_seedlings10_10x,
+		Dl_max_seedlings10_10x,
+		Dl_min_seedlings10_10x,
+		Dl_mean_seedlings10_10x,
+		T_seedlings75,
+		U_seedlings75,
+		RRR_seedlings75,
+		Dl_seedlings75,
+		T_mean_seedlings75_5x5,
+		T_max_seedlings75_5x5,
+		T_min_seedlings75_5x5,
+		U_mean_seedlings75_5x5,
+		RRR_mean_seedlings75_5x5,
+		Dl_sum_seedlings75_5x5,
+		Dl_max_seedlings75_5x5,
+		Dl_min_seedlings75_5x5,
+		Dl_mean_seedlings75_5x5,
+		T_mean_seedlings75_x10,
+		T_max_seedlings75_x10,
+		T_min_seedlings75_x10,
+		U_mean_seedlings75_x10,
+		RRR_mean_seedlings75_x10,
+		Dl_sum_seedlings75_x10,
+		Dl_max_seedlings75_x10,
+		Dl_min_seedlings75_x10,
+		Dl_mean_seedlings75_x10,
+		T_mean_seedlings75_10x,
+		T_max_seedlings75_10x,
+		T_min_seedlings75_10x,
+		U_mean_seedlings75_10x,
+		RRR_mean_seedlings75_10x,
+		Dl_sum_seedlings75_10x,
+		Dl_max_seedlings75_10x,
+		Dl_min_seedlings75_10x,
+		Dl_mean_seedlings75_10x,
+		T_flowering10,
+		U_flowering10,
+		RRR_flowering10,
+		Dl_flowering10,
+		T_mean_flowering10_5x5,
+		T_max_flowering10_5x5,
+		T_min_flowering10_5x5,
+		U_mean_flowering10_5x5,
+		RRR_mean_flowering10_5x5,
+		Dl_sum_flowering10_5x5,
+		Dl_max_flowering10_5x5,
+		Dl_min_flowering10_5x5,
+		Dl_mean_flowering10_5x5,
+		T_mean_flowering10_x10,
+		T_max_flowering10_x10,
+		T_min_flowering10_x10,
+		U_mean_flowering10_x10,
+		RRR_mean_flowering10_x10,
+		Dl_sum_flowering10_x10,
+		Dl_max_flowering10_x10,
+		Dl_min_flowering10_x10,
+		Dl_mean_flowering10_x10,
+		T_mean_flowering10_10x,
+		T_max_flowering10_10x,
+		T_min_flowering10_10x,
+		U_mean_flowering10_10x,
+		RRR_mean_flowering10_10x,
+		Dl_sum_flowering10_10x,
+		Dl_max_flowering10_10x,
+		Dl_min_flowering10_10x,
+		Dl_mean_flowering10_10x,
+		T_maturityFull,
+		U_maturityFull,
+		RRR_maturityFull,
+		Dl_maturityFull,
+		T_mean_maturityFull_5x5,
+		T_max_maturityFull_5x5,
+		T_min_maturityFull_5x5,
+		U_mean_maturityFull_5x5,
+		RRR_mean_maturityFull_5x5,
+		Dl_sum_maturityFull_5x5,
+		Dl_max_maturityFull_5x5,
+		Dl_min_maturityFull_5x5,
+		Dl_mean_maturityFull_5x5,
+		T_mean_maturityFull_x10,
+		T_max_maturityFull_x10,
+		T_min_maturityFull_x10,
+		U_mean_maturityFull_x10,
+		RRR_mean_maturityFull_x10,
+		Dl_sum_maturityFull_x10,
+		Dl_max_maturityFull_x10,
+		Dl_min_maturityFull_x10,
+		Dl_mean_maturityFull_x10,
+		T_mean_maturityFull_10x,
+		T_max_maturityFull_10x,
+		T_min_maturityFull_10x,
+		U_mean_maturityFull_10x,
+		RRR_mean_maturityFull_10x,
+		Dl_sum_maturityFull_10x,
+		Dl_max_maturityFull_10x,
+		Dl_min_maturityFull_10x,
+		Dl_mean_maturityFull_10x
+	FROM
+		phase_transition_time
+	FULL OUTER JOIN rp5_sowing_to_seedlings10 ON phase_transition_time.num = rp5_sowing_to_seedlings10.num
+	FULL OUTER JOIN rp5_sowing_to_seedlings75 ON phase_transition_time.num = rp5_sowing_to_seedlings75.num
+	FULL OUTER JOIN rp5_sowing_to_flowering10 ON phase_transition_time.num = rp5_sowing_to_flowering10.num
+	FULL OUTER JOIN rp5_seedlings75_to_flowering10 ON phase_transition_time.num = rp5_seedlings75_to_flowering10.num
+	FULL OUTER JOIN rp5_flowering75_to_maturityFull ON phase_transition_time.num = rp5_flowering75_to_maturityFull.num
+	FULL OUTER JOIN rp5_sowing ON phase_transition_time.num = rp5_sowing.num
+	FULL OUTER JOIN rp5_sowing_5x5 ON phase_transition_time.num = rp5_sowing_5x5.num
+	FULL OUTER JOIN rp5_sowing_x10 ON phase_transition_time.num = rp5_sowing_x10.num
+	FULL OUTER JOIN rp5_sowing_10x ON phase_transition_time.num = rp5_sowing_10x.num
+	FULL OUTER JOIN rp5_seedlings10 ON phase_transition_time.num = rp5_seedlings10.num
+	FULL OUTER JOIN rp5_seedlings10_5x5 ON phase_transition_time.num = rp5_seedlings10_5x5.num
+	FULL OUTER JOIN rp5_seedlings10_x10 ON phase_transition_time.num = rp5_seedlings10_x10.num
+	FULL OUTER JOIN rp5_seedlings10_10x ON phase_transition_time.num = rp5_seedlings10_10x.num
+	FULL OUTER JOIN rp5_seedlings75 ON phase_transition_time.num = rp5_seedlings75.num
+	FULL OUTER JOIN rp5_seedlings75_5x5 ON phase_transition_time.num = rp5_seedlings75_5x5.num
+	FULL OUTER JOIN rp5_seedlings75_x10 ON phase_transition_time.num = rp5_seedlings75_x10.num
+	FULL OUTER JOIN rp5_seedlings75_10x ON phase_transition_time.num = rp5_seedlings75_10x.num
+	FULL OUTER JOIN rp5_flowering10 ON phase_transition_time.num = rp5_flowering10.num
+	FULL OUTER JOIN rp5_flowering10_5x5 ON phase_transition_time.num = rp5_flowering10_5x5.num
+	FULL OUTER JOIN rp5_flowering10_x10 ON phase_transition_time.num = rp5_flowering10_x10.num
+	FULL OUTER JOIN rp5_flowering10_10x ON phase_transition_time.num = rp5_flowering10_10x.num
+	FULL OUTER JOIN rp5_maturityFull ON phase_transition_time.num = rp5_maturityFull.num
+	FULL OUTER JOIN rp5_maturityFull_5x5 ON phase_transition_time.num = rp5_maturityFull_5x5.num
+	FULL OUTER JOIN rp5_maturityFull_x10 ON phase_transition_time.num = rp5_maturityFull_x10.num
+	FULL OUTER JOIN rp5_maturityFull_10x ON phase_transition_time.num = rp5_maturityFull_10x.num
+	"
+)
+
+dbSendStatement(conn, SQL)
+
