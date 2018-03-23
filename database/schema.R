@@ -1024,7 +1024,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW phase_transition_time
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		seedlings10 - sowing as sowingToSeedlings10,
 		seedlings75 - sowing as sowingToSeedlings75,
 		flowering10 - seedlings75 as seedlings75ToFlowering10,
@@ -1038,7 +1038,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_to_seedlings10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_sowingToSeedlings10,
 		SUM(case when T > 10 then T end) as T_sum10_sowingToSeedlings10,
 		SUM(case when T > 15 then T end) as T_sum15_sowingToSeedlings10,
@@ -1057,7 +1057,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1065,7 +1065,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_to_seedlings75
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_sowingToSeedlings75,
 		SUM(case when T > 10 then T end) as T_sum10_sowingToSeedlings75,
 		SUM(case when T > 15 then T end) as T_sum15_sowingToSeedlings75,
@@ -1084,7 +1084,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 #odb.write(ODB, SQL)
@@ -1093,7 +1093,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_to_flowering10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings75ToFlowering10,
 		SUM(case when T > 10 then T end) as T_sum10_seedlings75ToFlowering10,
 		SUM(case when T > 15 then T end) as T_sum15_seedlings75ToFlowering10,
@@ -1112,7 +1112,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) AND EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1120,7 +1120,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering75_to_maturityFull
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_flowering75ToMaturityFull,
 		SUM(case when T > 10 then T end) as T_sum10_flowering75ToMaturityFull,
 		SUM(case when T > 15 then T end) as T_sum15_flowering75ToMaturityFull,
@@ -1139,7 +1139,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering75) AND EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1147,7 +1147,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		T as T_sowing,
 		U as U_sowing,
 		RRR as RRR_sowing,
@@ -1165,7 +1165,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_5x5
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_sowing_5x5,
 		MAX(T) as T_max_sowing_5x5,
 		MIN(T) as T_min_sowing_5x5,
@@ -1180,7 +1180,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) - 5 AND EXTRACT(DOY FROM sowing) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1188,7 +1188,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_x10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_sowing_x10,
 		MAX(T) as T_max_sowing_x10,
 		MIN(T) as T_min_sowing_x10,
@@ -1203,7 +1203,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) AND EXTRACT(DOY FROM sowing) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1211,7 +1211,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_sowing_10x
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_sowing_10x,
 		MAX(T) as T_max_sowing_10x,
 		MIN(T) as T_min_sowing_10x,
@@ -1226,7 +1226,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM sowing) - 10 AND EXTRACT(DOY FROM sowing) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from sowing)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1234,7 +1234,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		T as T_seedlings10,
 		U as U_seedlings10,
 		RRR as RRR_seedlings10,
@@ -1252,7 +1252,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_5x5
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings10_5x5,
 		MAX(T) as T_max_seedlings10_5x5,
 		MIN(T) as T_min_seedlings10_5x5,
@@ -1267,7 +1267,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) - 5 AND EXTRACT(DOY FROM seedlings10) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1275,7 +1275,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_x10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings10_x10,
 		MAX(T) as T_max_seedlings10_x10,
 		MIN(T) as T_min_seedlings10_x10,
@@ -1290,7 +1290,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) AND EXTRACT(DOY FROM seedlings10) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1298,7 +1298,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings10_10x
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings10_10x,
 		MAX(T) as T_max_seedlings10_10x,
 		MIN(T) as T_min_seedlings10_10x,
@@ -1313,7 +1313,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings10) - 10 AND EXTRACT(DOY FROM seedlings10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1321,7 +1321,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		T as T_seedlings75,
 		U as U_seedlings75,
 		RRR as RRR_seedlings75,
@@ -1339,7 +1339,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_5x5
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings75_5x5,
 		MAX(T) as T_max_seedlings75_5x5,
 		MIN(T) as T_min_seedlings75_5x5,
@@ -1354,7 +1354,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) - 5 AND EXTRACT(DOY FROM seedlings75) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1362,7 +1362,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_x10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings75_x10,
 		MAX(T) as T_max_seedlings75_x10,
 		MIN(T) as T_min_seedlings75_x10,
@@ -1377,7 +1377,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) AND EXTRACT(DOY FROM seedlings75) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1385,7 +1385,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_seedlings75_10x
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_seedlings75_10x,
 		MAX(T) as T_max_seedlings75_10x,
 		MIN(T) as T_min_seedlings75_10x,
@@ -1399,7 +1399,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM seedlings75) - 10 AND EXTRACT(DOY FROM seedlings75) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from seedlings75)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1407,7 +1407,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		T as T_flowering10,
 		U as U_flowering10,
 		RRR as RRR_flowering10,
@@ -1425,7 +1425,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_5x5
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_flowering10_5x5,
 		MAX(T) as T_max_flowering10_5x5,
 		MIN(T) as T_min_flowering10_5x5,
@@ -1439,7 +1439,7 @@ SQL <- c(
 		where
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) - 5 AND EXTRACT(DOY FROM flowering10) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1447,7 +1447,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_x10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_flowering10_x10,
 		MAX(T) as T_max_flowering10_x10,
 		MIN(T) as T_min_flowering10_x10,
@@ -1462,7 +1462,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) AND EXTRACT(DOY FROM flowering10) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1470,7 +1470,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_flowering10_10x
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_flowering10_10x,
 		MAX(T) as T_max_flowering10_10x,
 		MIN(T) as T_min_flowering10_10x,
@@ -1485,7 +1485,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM flowering10) - 10 AND EXTRACT(DOY FROM flowering10) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from flowering10)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1493,7 +1493,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		T as T_maturityFull,
 		U as U_maturityFull,
 		RRR as RRR_maturityFull,
@@ -1511,7 +1511,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_5x5
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_maturityFull_5x5,
 		MAX(T) as T_max_maturityFull_5x5,
 		MIN(T) as T_min_maturityFull_5x5,
@@ -1526,7 +1526,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) - 5 AND EXTRACT(DOY FROM maturityFull) + 5 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1534,7 +1534,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_x10
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_maturityFull_x10,
 		MAX(T) as T_max_maturityFull_x10,
 		MIN(T) as T_min_maturityFull_x10,
@@ -1549,7 +1549,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) AND EXTRACT(DOY FROM maturityFull) + 10 AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1557,7 +1557,7 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW rp5_maturityFull_10x
 	 as
-	 SELECT variety, inseriesnum, treatment_id, env,
+	 SELECT num, variety, inseriesnum, treatment_id, env,
 		AVG(T) as T_mean_maturityFull_10x,
 		MAX(T) as T_max_maturityFull_10x,
 		MIN(T) as T_min_maturityFull_10x,
@@ -1572,7 +1572,7 @@ SQL <- c(
 		EXTRACT(DOY FROM tsp) BETWEEN EXTRACT(DOY FROM maturityFull) - 10 AND EXTRACT(DOY FROM maturityFull) AND
 		EXTRACT(YEAR from tsp) = EXTRACT(YEAR from maturityFull)
 		AND rp5data.location = (SELECT location FROM environment WHERE environment.envname = accession.env)
-		GROUP BY variety, inseriesnum, treatment_id, env"
+		GROUP BY num"
 )
 
 dbSendStatement(conn, SQL)
@@ -1580,7 +1580,12 @@ dbSendStatement(conn, SQL)
 SQL <- c(
 	"CREATE VIEW clim_pheno
 	 as
-	 SELECT phase_transition_time.variety, phase_transition_time.inseriesnum, phase_transition_time.treatment_id, phase_transition_time.env,
+	 SELECT
+		phase_transition_time.num as num,
+		phase_transition_time.variety as variety,
+		phase_transition_time.inseriesnum as inseriesnum,
+		phase_transition_time.treatment_id as treatment_id,
+		phase_transition_time.env as env,
 		sowingToSeedlings10,
 		sowingToSeedlings75,
 		seedlings75ToFlowering10,
