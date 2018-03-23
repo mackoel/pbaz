@@ -102,3 +102,98 @@ get_gt_cnum <- function(conn, ofl, gt_like = '%', gt_limit = -1, cn_like = '%', 
     return(ret)
 }
 
+library(h5)
+
+cptb <-dbReadTable(conn, 'clim_pheno_full')
+write.csv(cptb[order(cptb$num),], file = 'supertab.csv', row.names = FALSE)
+
+# sowing-flowering
+
+var_index <- c(39:51, 78:107, 171:201)
+res_index <- 11
+
+p_index <- !is.na(tb[,res_index])
+
+dfile <- "chickpea-turkey-kos.h5"
+file.remove(dfile)
+file <- h5file(dfile)
+
+subindex <- cptb$origin == "Турция"
+
+file["data"] <- as.matrix(cptb[subindex & p_index,var_index])
+file["response"] <- as.matrix(cptb[subindex & p_index,res_index])
+file["measurements"] <- colnames(cptb[subindex & p_index,var_index])
+file["species"] <- as.character(cptb[subindex & p_index,]$variety)
+
+h5close(file)
+
+dfile <- "chickpea-ethiopia-kos.h5"
+file.remove(dfile)
+file <- h5file(dfile)
+
+subindex <- cptb$origin == "Эфиопия"
+
+file["data"] <- as.matrix(cptb[subindex & p_index,var_index])
+file["response"] <- as.matrix(cptb[subindex & p_index,res_index])
+file["measurements"] <- colnames(cptb[subindex & p_index,var_index])
+file["species"] <- as.character(cptb[subindex & p_index,]$variety)
+
+h5close(file)
+
+
+#for (i in 7:59) {
+#	mn <- mean(cropData[,i], na.rm = TRUE)
+#	cropData[is.na(cropData[,i]), i] <- mn
+#}
+
+# shoots-flowering
+#var_index <- c(13, 20, 26:31, 37:42, 43:52, 54:59)
+#res_index <- 8
+
+file["shootsFlowering"]["data"] <- as.matrix(cropData[,var_index])
+file["shootsFlowering"]["response"] <- as.matrix(cropData[,res_index])
+file["shootsFlowering"]["measurements"] <- colnames(cropData[,var_index])
+file["shootsFlowering"]["species"] <- as.character(cropData$Specie)
+
+#
+#[11] "avgTempSA"                   "sumTempAF"
+#[13] "avgTempAF"                   "sumTempSF"
+#[15] "avgTempSF"                   "precipitationSA"
+#[17] "precipitationAF"             "precipitationSF"
+#[19] "avgPrecipitationSA"          "avgPrecipitationAF"
+#[21] "avgPrecipitationSF"          "gtkAF"
+#[23] "tempSowing"                  "avgTemp5AfterSowing"
+#[25] "avgTemp10AfterSowing"        "avgTemp15AfterSowing"
+#[27] "avgTemp20AfterSowing"        "avgTemp30AfterSowing"
+#[29] "avgTemp40AfterSowing"        "avgTemp50AfterSowing"
+#[31] "avgTemp60AfterSowing"        "avgPrec5BeforeSowing"
+#[33] "avgPrec5AfterSowing"         "avgPrec10AfterSowing"
+#[35] "avgPrec5Before5AfterSowing"  "avgPrec5Before10AfterSowing"
+#[37] "avgPrec15AfterSowing"        "avgPrec20AfterSowing"
+#[39] "avgPrec30AfterSowing"        "avgPrec40AfterSowing"
+#[41] "avgPrec50AfterSowing"        "avgPrec60AfterSowing"
+#[43] "tempShoots"                  "avgTemp30AfterShoots"
+#[45] "avgTemp40AfterShoots"        "avgTemp50AfterShoots"
+#[47] "avgTemp60AfterShoots"        "avgPrec30AfterShoots"
+#[49] "avgPrec40AfterShoots"        "avgPrec50AfterShoots"
+#[51] "avgPrec60AfterShoots"        "dayLengthShoots"
+#[53] "dayLengthFlowering"          "avgDayLengthAF"
+#[55] "avgDayLength10AfterShoots"   "avgDayLength20AfterShoots"
+#[57] "avgDayLength30AfterShoots"   "avgDayLength40AfterShoots"
+#[59] "avgDayLength50AfterShoots"
+
+# sowing-shoots
+var_index <- c(11, 19, 23:25, 32:36)
+res_index <- 7
+
+file["data"] <- as.matrix(cropData[,var_index])
+file["response"] <- as.matrix(cropData[,res_index])
+file["measurements"] <- colnames(cropData[,var_index])
+file["species"] <- as.character(cropData$Specie)
+
+h5close(file)
+
+file.remove(dfile)
+export LD_LIBRARY_PATH=/home/nilmbb/kkozlov/lib:/home/nilmbb/kkozlov/lib64:$LD_LIBRARY_PATH
+module load library/atlas/3.10.3/gcc library/boost/1.64.0 library/openblas/0.2.19/gcc
+srun -J s4 -N 1 /home/nilmbb/kkozlov/bin/deepmethod --default-name=chickpea-turkey-intersept-pos-003.ini
